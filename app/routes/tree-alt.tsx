@@ -1,3 +1,26 @@
-export default function AuthorTreeAlt() {
-  return <p>Author tree — coming soon</p>;
+import { useLoaderData } from "react-router";
+import { listSites, listArticles } from "@scribe-atp/core";
+import { AuthorTree } from "~/components/Tree";
+import type { Route } from "./+types/tree-alt";
+
+export function meta({ params }: Route.MetaArgs) {
+  return [{ title: `${params.author} | Scribe Reader` }];
+}
+
+export async function loader({ params, request }: Route.LoaderArgs) {
+  const { author } = params;
+  const [sites, articles] = await Promise.all([
+    listSites(author, request.signal),
+    listArticles(author, request.signal),
+  ]);
+  return { author, sites, articles };
+}
+
+export default function AuthorTreeAltRoute() {
+  const { author, sites, articles } = useLoaderData<typeof loader>();
+  return (
+    <main className="max-w-2xl mx-auto px-6 py-8">
+      <AuthorTree author={author} sites={sites} articles={articles} />
+    </main>
+  );
 }
