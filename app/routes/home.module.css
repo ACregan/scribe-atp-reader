@@ -5,6 +5,11 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 30%,
+    rgb(198, 198, 198) 100%
+  );
 }
 
 .inner {
