@@ -12,9 +12,12 @@
   text-decoration: none;
   transition: color 0.15s;
 }
-
 .back:hover {
   color: #111;
+}
+.backIconContainer {
+  display: flex;
+  height: 16px;
 }
 
 .handle {
