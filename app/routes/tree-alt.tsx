@@ -19,7 +19,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 export default function AuthorTreeAltRoute() {
   const { author, sites, articles } = useLoaderData<typeof loader>();
   return (
-    <main className="max-w-2xl mx-auto px-6 py-8">
+    <main>
       <AuthorTree author={author} sites={sites} articles={articles} />
     </main>
   );

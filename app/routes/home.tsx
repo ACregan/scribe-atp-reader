@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { parseAuthorInput } from "~/lib/parseAuthorInput";
 import styles from "./home.module.css";
+import SvgIcon, { SvgImageList } from "~/components/SvgIcon/SvgIcon";
 
 export function meta() {
   return [{ title: "Scribe Reader" }];
@@ -20,7 +21,10 @@ export default function Home() {
   return (
     <main className={styles.page}>
       <div className={styles.inner}>
-        <h1 className={styles.title}>Scribe Reader</h1>
+        {/* <h1 className={styles.title}>Scribe Reader</h1> */}
+        <div className={styles.readerLogoContainer}>
+          <SvgIcon name={SvgImageList.ScribeReaderLogo} />
+        </div>
         <p className={styles.subtitle}>Browse any Scribe author's content</p>
         <form onSubmit={handleSubmit}>
           <input
