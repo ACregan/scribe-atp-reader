@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { parseAuthorInput } from "~/lib/parseAuthorInput";
 
 export function meta() {
   return [{ title: "Scribe Reader" }];
@@ -11,7 +12,7 @@ export default function Home() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const trimmed = value.trim().replace(/^at:\/\//, "");
+    const trimmed = parseAuthorInput(value);
     if (trimmed) navigate(`/${trimmed}`);
   }
 

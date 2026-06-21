@@ -1,5 +1,6 @@
 stages:
   - typecheck
+  - test
   - deploy
 
 default:
@@ -27,6 +28,21 @@ typecheck:
         - "**/*.js"
         - "**/*.json"
         - ".gitlab-ci.yml"
+
+test:
+  stage: test
+  script:
+    - npm ci
+    - npm test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - "**/*.ts"
+        - "**/*.tsx"
+        - "**/*.js"
+        - "**/*.json"
+        - ".gitlab-ci.yml"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 deploy:
   stage: deploy

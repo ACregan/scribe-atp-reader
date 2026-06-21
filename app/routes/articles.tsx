@@ -1,5 +1,7 @@
 import { useLoaderData, Link } from "react-router";
 import { listSites, listArticles, slugFromUri } from "@scribe-atp/core";
+import { tagArticles } from "~/lib/tagArticles";
+import type { ArticleState } from "~/lib/tagArticles";
 import type { Route } from "./+types/articles";
 
 export function meta({ params }: Route.MetaArgs) {
@@ -13,32 +15,16 @@ export async function loader({ params, request }: Route.LoaderArgs) {
     listArticles(author, request.signal),
   ]);
 
-  const publishedUris = new Set(
-    sites.flatMap((s) => s.groups.flatMap((g) => g.articles.map((a) => a.uri)))
-  );
-  const unpublishedUris = new Set(
-    sites.flatMap((s) => s.ungroupedArticles.map((a) => a.uri))
-  );
-
-  const tagged = articles.map((a) => ({
-    ...a,
-    state: publishedUris.has(a.uri)
-      ? ("published" as const)
-      : unpublishedUris.has(a.uri)
-        ? ("unpublished" as const)
-        : ("draft" as const),
-  }));
-
-  return { author, articles: tagged };
+  return { author, articles: tagArticles(sites, articles) };
 }
 
-const stateLabel: Record<"published" | "unpublished" | "draft", string> = {
+const stateLabel: Record<ArticleState, string> = {
   published: "Published",
   unpublished: "Unpublished",
   draft: "Draft",
 };
 
-const stateBadge: Record<"published" | "unpublished" | "draft", string> = {
+const stateBadge: Record<ArticleState, string> = {
   published: "bg-green-50 text-green-700",
   unpublished: "bg-yellow-50 text-yellow-700",
   draft: "bg-gray-100 text-gray-500",
