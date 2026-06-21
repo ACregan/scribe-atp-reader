@@ -1,0 +1,49 @@
+stages:
+  - typecheck
+  - deploy
+
+default:
+  image: node:22
+  tags:
+    - SERVER-docker-runner
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+  interruptible: true
+
+typecheck:
+  stage: typecheck
+  script:
+    - npm ci
+    - npm run typecheck
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - "**/*.ts"
+        - "**/*.tsx"
+        - "**/*.js"
+        - "**/*.json"
+        - ".gitlab-ci.yml"
+
+deploy:
+  stage: deploy
+  interruptible: false
+  environment:
+    name: production
+    url: https://reader.scribe-atp.app
+  before_script:
+    - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )
+    - eval $(ssh-agent -s)
+    - printf '\n' >> "$SSH_DEPLOY_KEY"
+    - chmod 400 "$SSH_DEPLOY_KEY" && ssh-add "$SSH_DEPLOY_KEY"
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh $VPS_USER@$VPS_HOST "~/server/deploy.sh scribe-atp-reader"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+      allow_failure: false
