@@ -53,11 +53,35 @@ Draft articles = all articles from `listArticles` minus those referenced in any 
 
 ## URL structure
 
+URLs mirror the AT Protocol data structure. The input accepts handles, DIDs, and full `at://` URIs — `at://` is stripped and the remainder becomes the path.
+
 ```
-/                          ← Landing / search input
-/:handle                   ← Author tree view (e.g. /alice.bsky.social)
-/:handle/:articleSlug      ← Article reading view
+/
+  Landing page — large input, accepts handle / DID / at:// URI
+
+/:author
+/:author/app.scribe.site
+  Full hierarchy — all Sites → Groups → Articles (both routes render identically)
+
+/:author/app.scribe.site/:siteRkey
+  Single site — that site's Groups and Articles only
+
+/:author/app.scribe.site/:siteRkey/:groupSlug
+  Single group — articles in that group only
+  e.g. /anthonycregan.dev/app.scribe.site/perpetualsummer-ltd/technology
+
+/:author/app.scribe.site/:siteRkey/:groupSlug/:articleRkey
+  Single article reading view (reached via site → group path)
+  e.g. /anthonycregan.dev/app.scribe.site/perpetualsummer-ltd/technology/code-assistants
+
+/:author/app.scribe.article
+  Flat list of all the author's articles across all states
+
+/:author/app.scribe.article/:articleRkey
+  Single article reading view (reached directly)
 ```
+
+`:author` is always a handle or DID — whichever the user entered. No normalisation applied.
 
 ## Stack
 
