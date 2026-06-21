@@ -1,0 +1,24 @@
+.header {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.back:hover {
+  color: #111;
+}
+
+.handle {
+  font-size: 0.875rem;
+  font-family: monospace;
+  color: #4b5563;
+}

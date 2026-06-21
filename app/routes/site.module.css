@@ -1,0 +1,44 @@
+.page {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 0.125rem;
+}
+
+.url {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.list {
+  padding: 0;
+}
+
+.item {
+  margin-bottom: 0.25rem;
+}
+
+.unpublishedSection {
+  padding-top: 0.5rem;
+}
+
+.unpublishedLabel {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.unpublishedList {
+  padding-left: 1.5rem;
+  margin-top: 0.125rem;
+}
+
+.unpublishedItem {
+  margin-bottom: 0.125rem;
+}

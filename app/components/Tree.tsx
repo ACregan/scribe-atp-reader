@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { slugFromUri } from "@scribe-atp/core";
 import type { SiteRecord, ArticleRef, SiteGroup } from "@scribe-atp/core";
+import styles from "./Tree.module.css";
 
 export function ArticleLink({
   article,
@@ -12,10 +13,10 @@ export function ArticleLink({
 }) {
   const rkey = slugFromUri(article.uri);
   return (
-    <li>
+    <li className={styles.groupItem}>
       <Link
         to={`/${author}/app.scribe.article/${rkey}`}
-        className="text-sm hover:underline text-gray-800"
+        className={styles.articleLink}
       >
         {article.title}
       </Link>
@@ -32,24 +33,22 @@ export function GroupNode({
 }) {
   const [open, setOpen] = useState(true);
   return (
-    <li>
-      <div className="flex items-center gap-1">
+    <li className={styles.siteItem}>
+      <div className={styles.groupHeader}>
         <button
           onClick={() => setOpen((o) => !o)}
-          className="text-xs text-gray-400 w-3 shrink-0"
+          className={styles.toggle}
           aria-label={open ? "Collapse group" : "Expand group"}
         >
           {open ? "▼" : "▶"}
         </button>
-        <span className="text-sm font-medium text-gray-700">
+        <span className={styles.groupTitle}>
           {group.title}
-          <span className="text-xs text-gray-400 font-normal ml-1">
-            ({group.articles.length})
-          </span>
+          <span className={styles.groupCount}>({group.articles.length})</span>
         </span>
       </div>
       {open && group.articles.length > 0 && (
-        <ul className="pl-6 mt-0.5 space-y-0.5">
+        <ul className={styles.groupList}>
           {group.articles.map((a) => (
             <ArticleLink key={a.uri} article={a} author={author} />
           ))}
@@ -70,37 +69,37 @@ export function SiteNode({
   const siteRkey = slugFromUri(site.uri);
 
   return (
-    <div className="mb-4">
-      <div className="flex items-center gap-1.5">
+    <div className={styles.site}>
+      <div className={styles.siteHeader}>
         <button
           onClick={() => setOpen((o) => !o)}
-          className="text-xs text-gray-400 w-3 shrink-0"
+          className={styles.toggle}
           aria-label={open ? "Collapse site" : "Expand site"}
         >
           {open ? "▼" : "▶"}
         </button>
         <Link
           to={`/${author}/app.scribe.site/${siteRkey}`}
-          className="font-semibold text-gray-900 hover:underline"
+          className={styles.siteLink}
         >
           {site.title}
         </Link>
-        <span className="text-xs text-gray-400">{site.url}</span>
+        <span className={styles.siteUrl}>{site.url}</span>
       </div>
 
       {open && (
-        <ul className="pl-6 mt-1 space-y-1">
+        <ul className={styles.siteList}>
           {site.groups.map((group) => (
             <GroupNode key={group.slug} group={group} author={author} />
           ))}
           {site.ungroupedArticles.length > 0 && (
-            <li>
-              <span className="text-sm text-gray-500 italic">
-                Unpublished Articles
-              </span>
-              <ul className="pl-6 mt-0.5 space-y-0.5">
+            <li className={styles.siteItem}>
+              <span className={styles.unpublishedLabel}>Unpublished Articles</span>
+              <ul className={styles.unpublishedList}>
                 {site.ungroupedArticles.map((a) => (
-                  <ArticleLink key={a.uri} article={a} author={author} />
+                  <li key={a.uri} className={styles.unpublishedItem}>
+                    <ArticleLink article={a} author={author} />
+                  </li>
                 ))}
               </ul>
             </li>
@@ -130,9 +129,9 @@ export function AuthorTree({ author, sites, articles }: AuthorTreeProps) {
 
   if (sites.length === 0 && articles.length === 0) {
     return (
-      <p className="text-gray-500 mt-8 text-center">
+      <p className={styles.empty}>
         No Scribe content found for{" "}
-        <span className="font-mono">{author}</span>.
+        <span className={styles.emptyHandle}>{author}</span>.
       </p>
     );
   }
@@ -143,13 +142,15 @@ export function AuthorTree({ author, sites, articles }: AuthorTreeProps) {
         <SiteNode key={site.uri} site={site} author={author} />
       ))}
       {drafts.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-sm text-gray-500 italic mb-2">
-            Draft Articles by <span className="font-mono">{author}</span>
+        <div className={styles.draftSection}>
+          <p className={styles.draftLabel}>
+            Draft Articles by <span className={styles.draftHandle}>{author}</span>
           </p>
-          <ul className="pl-6 space-y-0.5">
+          <ul className={styles.draftList}>
             {drafts.map((a) => (
-              <ArticleLink key={a.uri} article={a} author={author} />
+              <li key={a.uri} className={styles.draftItem}>
+                <ArticleLink article={a} author={author} />
+              </li>
             ))}
           </ul>
         </div>

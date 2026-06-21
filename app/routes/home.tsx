@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { parseAuthorInput } from "~/lib/parseAuthorInput";
+import styles from "./home.module.css";
 
 export function meta() {
   return [{ title: "Scribe Reader" }];
@@ -17,21 +18,17 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8">
-      <div className="w-full max-w-lg">
-        <h1 className="text-4xl font-semibold tracking-tight mb-2 text-center">
-          Scribe Reader
-        </h1>
-        <p className="text-center text-gray-500 mb-10 text-sm">
-          Browse any Scribe author's content
-        </p>
+    <main className={styles.page}>
+      <div className={styles.inner}>
+        <h1 className={styles.title}>Scribe Reader</h1>
+        <p className={styles.subtitle}>Browse any Scribe author's content</p>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder="alice.bsky.social"
-            className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 font-mono"
+            className={styles.input}
             autoFocus
             spellCheck={false}
             autoComplete="off"
@@ -39,7 +36,7 @@ export default function Home() {
             autoCapitalize="off"
           />
         </form>
-        <p className="text-xs text-gray-400 text-center mt-3">
+        <p className={styles.hint}>
           Paste a handle, DID, or <code>at://</code> URI — press Enter to browse
         </p>
       </div>

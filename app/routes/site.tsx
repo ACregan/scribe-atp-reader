@@ -2,6 +2,7 @@ import { useLoaderData } from "react-router";
 import { fetchSite } from "@scribe-atp/core";
 import { GroupNode, ArticleLink } from "~/components/Tree";
 import type { Route } from "./+types/site";
+import styles from "./site.module.css";
 
 export function meta({ data }: Route.MetaArgs) {
   return [{ title: `${data?.site.title ?? "Site"} | Scribe Reader` }];
@@ -16,21 +17,21 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 export default function SiteRoute() {
   const { author, site } = useLoaderData<typeof loader>();
   return (
-    <main className="max-w-2xl mx-auto px-6 py-8">
-      <h1 className="font-semibold text-xl mb-0.5">{site.title}</h1>
-      <p className="text-sm text-gray-500 mb-6">{site.url}</p>
-      <ul className="space-y-1">
+    <main className={styles.page}>
+      <h1 className={styles.title}>{site.title}</h1>
+      <p className={styles.url}>{site.url}</p>
+      <ul className={styles.list}>
         {site.groups.map((group) => (
           <GroupNode key={group.slug} group={group} author={author} />
         ))}
         {site.ungroupedArticles.length > 0 && (
-          <li className="pt-2">
-            <span className="text-sm text-gray-500 italic">
-              Unpublished Articles
-            </span>
-            <ul className="pl-6 mt-0.5 space-y-0.5">
+          <li className={styles.unpublishedSection}>
+            <span className={styles.unpublishedLabel}>Unpublished Articles</span>
+            <ul className={styles.unpublishedList}>
               {site.ungroupedArticles.map((a) => (
-                <ArticleLink key={a.uri} article={a} author={author} />
+                <li key={a.uri} className={styles.unpublishedItem}>
+                  <ArticleLink article={a} author={author} />
+                </li>
               ))}
             </ul>
           </li>

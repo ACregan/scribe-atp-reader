@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import styles from "./root.module.css";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -49,15 +50,15 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="p-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-2">{message}</h1>
-      <p className="mb-4">{details}</p>
+    <main className={styles.error}>
+      <h1 className={styles.title}>{message}</h1>
+      <p className={styles.message}>{details}</p>
       {stack && (
-        <pre className="overflow-x-auto text-sm p-4 bg-gray-100 rounded">
+        <pre className={styles.stack}>
           <code>{stack}</code>
         </pre>
       )}
-      <a href="/" className="underline">
+      <a href="/" className={styles.link}>
         Return to search
       </a>
     </main>

@@ -3,6 +3,7 @@ import { listSites, listArticles, slugFromUri } from "@scribe-atp/core";
 import { tagArticles } from "~/lib/tagArticles";
 import type { ArticleState } from "~/lib/tagArticles";
 import type { Route } from "./+types/articles";
+import styles from "./articles.module.css";
 
 export function meta({ params }: Route.MetaArgs) {
   return [{ title: `All articles by ${params.author} | Scribe Reader` }];
@@ -24,10 +25,10 @@ const stateLabel: Record<ArticleState, string> = {
   draft: "Draft",
 };
 
-const stateBadge: Record<ArticleState, string> = {
-  published: "bg-green-50 text-green-700",
-  unpublished: "bg-yellow-50 text-yellow-700",
-  draft: "bg-gray-100 text-gray-500",
+const stateBadgeClass: Record<ArticleState, string> = {
+  published: styles.badgePublished,
+  unpublished: styles.badgeUnpublished,
+  draft: styles.badgeDraft,
 };
 
 export default function ArticlesRoute() {
@@ -35,36 +36,34 @@ export default function ArticlesRoute() {
 
   if (articles.length === 0) {
     return (
-      <main className="max-w-2xl mx-auto px-6 py-8">
-        <p className="text-gray-500">
-          No articles found for <span className="font-mono">{author}</span>.
+      <main className={styles.page}>
+        <p className={styles.empty}>
+          No articles found for <span className={styles.handle}>{author}</span>.
         </p>
       </main>
     );
   }
 
   return (
-    <main className="max-w-2xl mx-auto px-6 py-8">
-      <h1 className="text-xl font-semibold mb-6">
-        All articles by <span className="font-mono">{author}</span>
+    <main className={styles.page}>
+      <h1 className={styles.title}>
+        All articles by <span className={styles.handle}>{author}</span>
       </h1>
-      <ul className="space-y-4">
+      <ul className={styles.list}>
         {articles.map((article) => (
-          <li key={article.uri} className="flex items-start gap-3">
-            <span
-              className={`mt-0.5 shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${stateBadge[article.state]}`}
-            >
+          <li key={article.uri} className={styles.item}>
+            <span className={`${styles.badge} ${stateBadgeClass[article.state]}`}>
               {stateLabel[article.state]}
             </span>
-            <div>
+            <div className={styles.itemBody}>
               <Link
                 to={`/${author}/app.scribe.article/${slugFromUri(article.uri)}`}
-                className="hover:underline text-gray-900 font-medium"
+                className={styles.link}
               >
                 {article.title}
               </Link>
               {article.synopsis && (
-                <p className="text-sm text-gray-500 mt-0.5">{article.synopsis}</p>
+                <p className={styles.synopsis}>{article.synopsis}</p>
               )}
             </div>
           </li>

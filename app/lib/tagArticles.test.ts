@@ -5,12 +5,15 @@ import type { SiteRecord, ArticleRef } from "@scribe-atp/core";
 const makeArticle = (rkey: string): ArticleRef => ({
   uri: `at://did:plc:author/app.scribe.article/${rkey}`,
   title: `Article ${rkey}`,
+  splashImageUrl: null,
+  createdAt: "2024-01-01T00:00:00Z",
 });
 
 const makeSite = (published: string[], unpublished: string[]): SiteRecord => ({
   uri: "at://did:plc:author/app.scribe.site/site1",
   title: "My Site",
   url: "mysite.com",
+  urlPrefix: "",
   groups: [
     {
       title: "Group",
@@ -64,6 +67,8 @@ describe("tagArticles", () => {
       uri: "at://did:plc:author/app.scribe.article/rkey1",
       title: "My Article",
       synopsis: "A synopsis",
+      splashImageUrl: null,
+      createdAt: "2024-01-01T00:00:00Z",
     };
     expect(tagArticles([], [article])[0]).toMatchObject({
       uri: article.uri,

@@ -1,4 +1,5 @@
 import type { Article } from "@scribe-atp/core";
+import styles from "./ArticleView.module.css";
 
 interface PublishedOn {
   title: string;
@@ -12,13 +13,13 @@ interface ArticleViewProps {
 
 export function ArticleView({ article, publishedOn }: ArticleViewProps) {
   return (
-    <article className="max-w-2xl mx-auto px-6 py-8">
+    <article className={styles.article}>
       {publishedOn && (
-        <div className="mb-6 px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600">
+        <div className={styles.publishedBanner}>
           Published on{" "}
           <a
             href={publishedOn.canonicalUrl}
-            className="underline hover:text-gray-900"
+            className={styles.publishedBannerLink}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -30,14 +31,12 @@ export function ArticleView({ article, publishedOn }: ArticleViewProps) {
         <img
           src={article.splashImageUrl}
           alt=""
-          className="w-full h-56 object-cover rounded-lg mb-6"
+          className={styles.splashImage}
         />
       )}
-      <h1 className="text-3xl font-bold mb-3 leading-tight">{article.title}</h1>
+      <h1 className={styles.title}>{article.title}</h1>
       {article.synopsis && (
-        <p className="text-lg text-gray-500 mb-8 leading-relaxed">
-          {article.synopsis}
-        </p>
+        <p className={styles.synopsis}>{article.synopsis}</p>
       )}
       <div
         className="article-body"
