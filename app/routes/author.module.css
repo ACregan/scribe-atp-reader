@@ -1,9 +1,11 @@
 .header {
   border-bottom: 1px solid #e5e7eb;
-  padding: 1rem 1.5rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 50rem 1fr;
   align-items: center;
-  gap: 1rem;
+  height: 8rem;
+  box-shadow: 0 -20px 6px -20px rgba(0, 0, 0, 0.5) inset;
+  border-bottom: 0.1rem solid #dedede;
 }
 
 .back {
@@ -15,13 +17,21 @@
 .back:hover {
   color: #111;
 }
-.backIconContainer {
+.iconColumn {
   display: flex;
-  height: 16px;
+  align-items: center;
+  padding-left: 3rem;
+}
+.scribeReaderIcon {
+  height: 3rem;
 }
 
-.handle {
-  font-size: 0.875rem;
-  font-family: monospace;
-  color: #4b5563;
+.searchColumn {
+  /* center column — width controlled by grid */
+}
+.rightColumn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 3rem;
 }
