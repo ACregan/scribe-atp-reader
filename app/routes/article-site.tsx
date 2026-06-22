@@ -27,7 +27,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   return { article, publishedOn };
 }
 
-export default function ArticleSiteRoute() {
+export default function ArticleSiteRoute({ params }: Route.ComponentProps) {
   const { article, publishedOn } = useLoaderData<typeof loader>();
-  return <ArticleView article={article} publishedOn={publishedOn} />;
+  return <ArticleView article={article} publishedOn={publishedOn} author={params.author} />;
 }
