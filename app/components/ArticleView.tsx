@@ -1,5 +1,7 @@
+import { Link } from "react-router";
 import type { Article } from "@scribe-atp/core";
 import styles from "./ArticleView.module.css";
+import SvgIcon, { SvgImageList } from "./SvgIcon/SvgIcon";
 
 interface PublishedOn {
   title: string;
@@ -9,14 +11,27 @@ interface PublishedOn {
 interface ArticleViewProps {
   article: Article;
   publishedOn: PublishedOn | null;
+  author: string;
 }
 
-export function ArticleView({ article, publishedOn }: ArticleViewProps) {
+export function ArticleView({
+  article,
+  publishedOn,
+  author,
+}: ArticleViewProps) {
+  const backLink = (
+    <Link to={`/${author}`} className={styles.backLink}>
+      <SvgIcon className={styles.backIcon} name={SvgImageList.ArrowLeft} />
+      BACK
+    </Link>
+  );
+
   return (
     <article className={styles.article}>
+      <div className={styles.backTop}>{backLink}</div>
       {publishedOn && (
         <div className={styles.publishedBanner}>
-          Published on{" "}
+          This Article is published on{" "}
           <a
             href={publishedOn.canonicalUrl}
             className={styles.publishedBannerLink}
@@ -39,9 +54,10 @@ export function ArticleView({ article, publishedOn }: ArticleViewProps) {
         <p className={styles.synopsis}>{article.synopsis}</p>
       )}
       <div
-        className="article-body"
+        className={`${styles.articleBody} article-body`}
         dangerouslySetInnerHTML={{ __html: article.content }}
       />
+      <div className={styles.backBottom}>{backLink}</div>
     </article>
   );
 }

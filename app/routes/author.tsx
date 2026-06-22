@@ -2,18 +2,24 @@ import { Link, Outlet } from "react-router";
 import type { Route } from "./+types/author";
 import styles from "./author.module.css";
 import SvgIcon, { SvgImageList } from "~/components/SvgIcon/SvgIcon";
+import { SearchBar } from "~/components/SearchBar/SearchBar";
 
 export default function AuthorLayout({ params }: Route.ComponentProps) {
   return (
     <>
       <header className={styles.header}>
-        <Link to="/" className={styles.back}>
-          <div className={styles.backIconContainer}>
-            <SvgIcon name={SvgImageList.ArrowLeft} />
-            <SvgIcon name={SvgImageList.ScribeReaderLogo} />
-          </div>
-        </Link>
-        <span className={styles.handle}>{params.author}</span>
+        <div className={styles.iconColumn}>
+          <Link to="/" className={styles.back}>
+            <SvgIcon
+              className={styles.scribeReaderIcon}
+              name={SvgImageList.ScribeReaderLogo}
+            />
+          </Link>
+        </div>
+        <div className={styles.searchColumn}>
+          <SearchBar key={params.author} initialValue={params.author} />
+        </div>
+        <div className={styles.rightColumn}></div>
       </header>
       <Outlet />
     </>

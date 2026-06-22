@@ -94,7 +94,9 @@ export function SiteNode({
           ))}
           {site.ungroupedArticles.length > 0 && (
             <li className={styles.siteItem}>
-              <span className={styles.unpublishedLabel}>Unpublished Articles</span>
+              <span className={styles.unpublishedLabel}>
+                Unpublished Articles
+              </span>
               <ul className={styles.unpublishedList}>
                 {site.ungroupedArticles.map((a) => (
                   <li key={a.uri} className={styles.unpublishedItem}>
@@ -123,7 +125,7 @@ export function AuthorTree({ author, sites, articles }: AuthorTreeProps) {
         ...s.groups.flatMap((g) => g.articles),
         ...s.ungroupedArticles,
       ])
-      .map((a) => a.uri)
+      .map((a) => a.uri),
   );
   const drafts = articles.filter((a) => !referencedUris.has(a.uri));
 
@@ -137,24 +139,27 @@ export function AuthorTree({ author, sites, articles }: AuthorTreeProps) {
   }
 
   return (
-    <div>
-      {sites.map((site) => (
-        <SiteNode key={site.uri} site={site} author={author} />
-      ))}
-      {drafts.length > 0 && (
-        <div className={styles.draftSection}>
-          <p className={styles.draftLabel}>
-            Draft Articles by <span className={styles.draftHandle}>{author}</span>
-          </p>
-          <ul className={styles.draftList}>
-            {drafts.map((a) => (
-              <li key={a.uri} className={styles.draftItem}>
-                <ArticleLink article={a} author={author} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+    <div className={styles.pageContainer}>
+      <div className={styles.treeContainer}>
+        {sites.map((site) => (
+          <SiteNode key={site.uri} site={site} author={author} />
+        ))}
+        {drafts.length > 0 && (
+          <div className={styles.draftSection}>
+            <p className={styles.draftLabel}>
+              Draft Articles by{" "}
+              <span className={styles.draftHandle}>{author}</span>
+            </p>
+            <ul className={styles.draftList}>
+              {drafts.map((a) => (
+                <li key={a.uri} className={styles.draftItem}>
+                  <ArticleLink article={a} author={author} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

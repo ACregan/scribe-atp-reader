@@ -102,6 +102,19 @@
   font-family: monospace;
 }
 
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.treeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 50rem;
+}
+
 .draftSection {
   margin-top: 1rem;
   padding-top: 1rem;
