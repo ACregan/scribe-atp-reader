@@ -1,6 +1,8 @@
 import styles from "./home.module.css";
 import SvgIcon, { SvgImageList } from "~/components/SvgIcon/SvgIcon";
 import { SearchBar } from "~/components/SearchBar/SearchBar";
+import { Link } from "react-router";
+import SisterLinks from "~/components/SisterLinks/SisterLinks";
 
 export function meta() {
   return [{ title: "Scribe Reader" }];
@@ -9,6 +11,9 @@ export function meta() {
 export default function Home() {
   return (
     <main className={styles.page}>
+      <div className={styles.linksContainer}>
+        <SisterLinks />
+      </div>
       <div className={styles.inner}>
         <div className={styles.readerLogoContainer}>
           <SvgIcon name={SvgImageList.ScribeReaderLogo} />
