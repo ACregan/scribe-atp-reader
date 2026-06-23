@@ -25,6 +25,11 @@
 .scribeReaderIcon {
   height: 3rem;
 }
+.linksContainer {
+  padding: 3rem 4rem;
+  display: flex;
+  gap: 4rem;
+}
 
 .searchColumn {
   /* center column — width controlled by grid */

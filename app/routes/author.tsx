@@ -3,6 +3,7 @@ import type { Route } from "./+types/author";
 import styles from "./author.module.css";
 import SvgIcon, { SvgImageList } from "~/components/SvgIcon/SvgIcon";
 import { SearchBar } from "~/components/SearchBar/SearchBar";
+import SisterLinks from "~/components/SisterLinks/SisterLinks";
 
 export default function AuthorLayout({ params }: Route.ComponentProps) {
   return (
@@ -15,6 +16,9 @@ export default function AuthorLayout({ params }: Route.ComponentProps) {
               name={SvgImageList.ScribeReaderLogo}
             />
           </Link>
+          <div className={styles.linksContainer}>
+            <SisterLinks />
+          </div>
         </div>
         <div className={styles.searchColumn}>
           <SearchBar key={params.author} initialValue={params.author} />
