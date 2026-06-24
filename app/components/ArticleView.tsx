@@ -50,8 +50,8 @@ export function ArticleView({
         />
       )}
       <h1 className={styles.title}>{article.title}</h1>
-      {article.synopsis && (
-        <p className={styles.synopsis}>{article.synopsis}</p>
+      {article.description && (
+        <p className={styles.synopsis}>{article.description}</p>
       )}
       <div
         className={`${styles.articleBody} article-body`}

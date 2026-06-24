@@ -24,7 +24,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
         const prefix = site.urlPrefix ? `/${site.urlPrefix}` : "";
         publishedOn = {
           title: site.title,
-          canonicalUrl: `https://${site.url}${prefix}/${group.slug}/${ref.url ?? articleRkey}`,
+          canonicalUrl: `https://${site.url}${prefix}/${group.slug}/${ref.slug ?? articleRkey}`,
         };
         break outer;
       }

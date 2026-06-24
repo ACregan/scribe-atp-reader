@@ -20,7 +20,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   const publishedOn = ref
     ? {
         title: site.title,
-        canonicalUrl: `https://${site.url}${prefix}/${groupSlug}/${ref.url ?? articleRkey}`,
+        canonicalUrl: `https://${site.url}${prefix}/${groupSlug}/${ref.slug ?? articleRkey}`,
       }
     : null;
 
