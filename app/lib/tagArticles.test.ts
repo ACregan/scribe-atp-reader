@@ -66,14 +66,14 @@ describe("tagArticles", () => {
     const article: ArticleRef = {
       uri: "at://did:plc:author/app.scribe.article/rkey1",
       title: "My Article",
-      synopsis: "A synopsis",
+      description: "A description",
       splashImageUrl: null,
       createdAt: "2024-01-01T00:00:00Z",
     };
     expect(tagArticles([], [article])[0]).toMatchObject({
       uri: article.uri,
       title: article.title,
-      synopsis: article.synopsis,
+      description: article.description,
       state: "draft",
     });
   });

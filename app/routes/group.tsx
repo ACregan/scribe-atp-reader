@@ -38,8 +38,8 @@ export default function GroupRoute() {
             >
               {article.title}
             </Link>
-            {article.synopsis && (
-              <p className={styles.synopsis}>{article.synopsis}</p>
+            {article.description && (
+              <p className={styles.synopsis}>{article.description}</p>
             )}
           </li>
         ))}
