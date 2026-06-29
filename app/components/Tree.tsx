@@ -15,7 +15,7 @@ export function ArticleLink({
   return (
     <li className={styles.groupItem}>
       <Link
-        to={`/${author}/app.scribe.article/${rkey}`}
+        to={`/${author}/site.standard.document/${rkey}`}
         className={styles.articleLink}
       >
         {article.title}
@@ -78,7 +78,7 @@ export function SiteNode({
           {open ? "▼" : "▶"}
         </button>
         <Link
-          to={`/${author}/app.scribe.site/${site.url}`}
+          to={`/${author}/site.standard.publication/${site.url}`}
           className={styles.siteLink}
         >
           {site.title}

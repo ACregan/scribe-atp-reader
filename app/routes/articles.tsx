@@ -57,7 +57,7 @@ export default function ArticlesRoute() {
             </span>
             <div className={styles.itemBody}>
               <Link
-                to={`/${author}/app.scribe.article/${slugFromUri(article.uri)}`}
+                to={`/${author}/site.standard.document/${slugFromUri(article.uri)}`}
                 className={styles.link}
               >
                 {article.title}

@@ -33,7 +33,7 @@ export default function GroupRoute() {
         {group.articles.map((article) => (
           <li key={article.uri} className={styles.item}>
             <Link
-              to={`/${author}/app.scribe.article/${slugFromUri(article.uri)}`}
+              to={`/${author}/site.standard.document/${slugFromUri(article.uri)}`}
               className={styles.link}
             >
               {article.title}

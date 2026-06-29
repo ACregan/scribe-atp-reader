@@ -42,43 +42,45 @@ When an author has no Site records, skip the Site level entirely and show "Draft
 
 ## SDK dependency
 
-The Reader requires two functions not yet in `@scribe-atp/core`:
+The Reader uses `@scribe-atp/core`:
 
-- `listSites(author, signal?)` — calls `com.atproto.repo.listRecords` for `app.scribe.site`
-- `listArticles(author, signal?)` — calls `com.atproto.repo.listRecords` for `app.scribe.article`
+- `listSites(author, signal?)` — lists `site.standard.publication` records
+- `listArticles(author, signal?)` — lists `site.standard.document` records
+- `fetchSite(author, publicationUrl, signal?)` — fetches a single publication by its full HTTPS URL (e.g. `"https://norobots.blog"`)
+- `fetchArticle(author, rkey, signal?)` — fetches a single `site.standard.document` record by TID rkey
 
-Draft articles = all articles from `listArticles` minus those referenced in any site record.
-
-**These must be released in a new `@scribe-atp/core` minor version before the Reader can be built.**
+Draft articles = all articles from `listArticles` not referenced in any site's `groups` or `ungroupedArticles`.
 
 ## URL structure
 
-URLs mirror the AT Protocol data structure. The input accepts handles, DIDs, and full `at://` URIs — `at://` is stripped and the remainder becomes the path.
+URLs use the current collection names. The input accepts handles, DIDs, and full `at://` URIs — `at://` is stripped and the remainder becomes the path.
 
 ```
 /
   Landing page — large input, accepts handle / DID / at:// URI
 
 /:author
-/:author/app.scribe.site
+/:author/site.standard.publication
   Full hierarchy — all Sites → Groups → Articles (both routes render identically)
 
-/:author/app.scribe.site/:siteRkey
+/:author/site.standard.publication/:siteDomain
   Single site — that site's Groups and Articles only
+  :siteDomain is the domain from site.url e.g. "norobots.blog"
 
-/:author/app.scribe.site/:siteRkey/:groupSlug
+/:author/site.standard.publication/:siteDomain/:groupSlug
   Single group — articles in that group only
-  e.g. /anthonycregan.dev/app.scribe.site/perpetualsummer-ltd/technology
+  e.g. /anthonycregan.dev/site.standard.publication/norobots.blog/technology
 
-/:author/app.scribe.site/:siteRkey/:groupSlug/:articleRkey
+/:author/site.standard.publication/:siteDomain/:groupSlug/:articleRkey
   Single article reading view (reached via site → group path)
-  e.g. /anthonycregan.dev/app.scribe.site/perpetualsummer-ltd/technology/code-assistants
+  :articleRkey is the TID rkey e.g. 3mp4hfovqib2h
 
-/:author/app.scribe.article
+/:author/site.standard.document
   Flat list of all the author's articles across all states
 
-/:author/app.scribe.article/:articleRkey
+/:author/site.standard.document/:articleRkey
   Single article reading view (reached directly)
+  :articleRkey is the TID rkey
 ```
 
 `:author` is always a handle or DID — whichever the user entered. No normalisation applied.
