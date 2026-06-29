@@ -47,6 +47,36 @@
 .articleBody {
   font-size: 1.6rem;
   font-weight: normal;
+  line-height: 1.75;
+}
+
+.articleBody p {
+  margin-bottom: 1.25em;
+}
+
+.articleBody h1,
+.articleBody h2,
+.articleBody h3,
+.articleBody h4,
+.articleBody h5,
+.articleBody h6 {
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.articleBody h1 { font-size: 1.75em; }
+.articleBody h2 { font-size: 1.4em; }
+.articleBody h3 { font-size: 1.2em; }
+
+.articleBody a {
+  text-decoration: underline;
+}
+
+.articleBody hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 2em 0;
 }
 
 .backLink {

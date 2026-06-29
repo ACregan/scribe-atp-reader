@@ -42,13 +42,12 @@
 .subtitle {
   text-align: center;
   color: #6b7280;
-  margin-top: 1.25rem;
-  margin-bottom: 2.5rem;
+  margin-top: 1.75rem;
   font-size: 1.5rem;
 }
 
 .hint {
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   color: #9ca3af;
   text-align: center;
   margin-top: 0.75rem;

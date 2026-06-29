@@ -8,10 +8,10 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export async function loader({ params, request }: Route.LoaderArgs) {
-  const { author, siteRkey, groupSlug, articleRkey } = params;
+  const { author, siteDomain, groupSlug, articleRkey } = params;
   const [article, site] = await Promise.all([
     fetchArticle(author, articleRkey, request.signal),
-    fetchSite(author, siteRkey, request.signal),
+    fetchSite(author, `https://${siteDomain}`, request.signal),
   ]);
 
   const group = site.groups.find((g) => g.slug === groupSlug);

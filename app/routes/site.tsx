@@ -9,8 +9,8 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export async function loader({ params, request }: Route.LoaderArgs) {
-  const { author, siteRkey } = params;
-  const site = await fetchSite(author, siteRkey, request.signal);
+  const { author, siteDomain } = params;
+  const site = await fetchSite(author, `https://${siteDomain}`, request.signal);
   return { author, site };
 }
 
