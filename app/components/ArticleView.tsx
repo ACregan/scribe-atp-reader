@@ -1,7 +1,9 @@
 import { Link } from "react-router";
 import type { Article } from "@scribe-atp/core";
+import { ScribeContent } from "@scribe-atp/react";
 import styles from "./ArticleView.module.css";
 import SvgIcon, { SvgImageList } from "./SvgIcon/SvgIcon";
+import "@scribe-atp/styles";
 
 interface PublishedOn {
   title: string;
@@ -53,10 +55,7 @@ export function ArticleView({
       {article.description && (
         <p className={styles.synopsis}>{article.description}</p>
       )}
-      <div
-        className={`${styles.articleBody} article-body`}
-        dangerouslySetInnerHTML={{ __html: article.content }}
-      />
+      <ScribeContent html={article.content} className={styles.articleBody} />
       <div className={styles.backBottom}>{backLink}</div>
     </article>
   );

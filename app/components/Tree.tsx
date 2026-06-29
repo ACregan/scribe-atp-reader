@@ -66,7 +66,6 @@ export function SiteNode({
   author: string;
 }) {
   const [open, setOpen] = useState(true);
-  const siteRkey = slugFromUri(site.uri);
 
   return (
     <div className={styles.site}>
@@ -79,7 +78,7 @@ export function SiteNode({
           {open ? "▼" : "▶"}
         </button>
         <Link
-          to={`/${author}/app.scribe.site/${siteRkey}`}
+          to={`/${author}/app.scribe.site/${site.url}`}
           className={styles.siteLink}
         >
           {site.title}

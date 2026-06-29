@@ -16,8 +16,8 @@ export function meta({ data: d }: Route.MetaArgs) {
 }
 
 export async function loader({ params, request }: Route.LoaderArgs) {
-  const { author, siteRkey, groupSlug } = params;
-  const site = await fetchSite(author, siteRkey, request.signal);
+  const { author, siteDomain, groupSlug } = params;
+  const site = await fetchSite(author, `https://${siteDomain}`, request.signal);
   const group = site.groups.find((g) => g.slug === groupSlug);
   if (!group) throw data("Group not found", { status: 404 });
   return { author, site, group };

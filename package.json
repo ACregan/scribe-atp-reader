@@ -13,7 +13,9 @@
   "dependencies": {
     "@react-router/node": "^7.18.0",
     "@react-router/serve": "^7.18.0",
-    "@scribe-atp/core": "^2.0.0",
+    "@scribe-atp/core": "^3.4.0",
+    "@scribe-atp/react": "^2.1.0",
+    "@scribe-atp/styles": "^1.1.0",
     "isbot": "^5.1.31",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
