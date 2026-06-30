@@ -1,5 +1,6 @@
-import { data, useLoaderData, Link } from "react-router";
-import { fetchSite, slugFromUri } from "@scribe-atp/core";
+import { data, useLoaderData } from "react-router";
+import { fetchSite } from "@scribe-atp/core";
+import { ArticleItem } from "~/components/ArticleItem/ArticleItem";
 import type { Route } from "./+types/group";
 import styles from "./group.module.css";
 
@@ -27,23 +28,17 @@ export default function GroupRoute() {
   const { author, site, group } = useLoaderData<typeof loader>();
   return (
     <main className={styles.page}>
-      <p className={styles.siteName}>{site.title}</p>
-      <h1 className={styles.title}>{group.title}</h1>
-      <ul className={styles.list}>
-        {group.articles.map((article) => (
-          <li key={article.uri} className={styles.item}>
-            <Link
-              to={`/${author}/site.standard.document/${slugFromUri(article.uri)}`}
-              className={styles.link}
-            >
-              {article.title}
-            </Link>
-            {article.description && (
-              <p className={styles.synopsis}>{article.description}</p>
-            )}
-          </li>
-        ))}
-      </ul>
+      <div className={styles.pageContainer}>
+        <p className={styles.siteName}>{site.title}</p>
+        <h1 className={styles.title}>{group.title}</h1>
+        <ul className={styles.list}>
+          {group.articles.map((article) => (
+            <li key={article.uri} className={styles.item}>
+              <ArticleItem article={article} author={author} showDescription />
+            </li>
+          ))}
+        </ul>
+      </div>
     </main>
   );
 }

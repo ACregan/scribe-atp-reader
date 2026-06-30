@@ -1,0 +1,47 @@
+.collapseExpand {
+  border-radius: 50%;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.largeSize {
+  height: 3rem;
+  width: 3rem;
+}
+
+.mediumSize {
+  height: 2.25rem;
+  width: 2.25rem;
+}
+
+.smallSize {
+  height: 1.8rem;
+  width: 1.8rem;
+}
+
+.collapsed {
+  composes: collapseExpand;
+}
+
+.expanded {
+  composes: collapseExpand;
+}
+
+.triangle {
+  width: 1.2rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.expanded .triangle {
+  transform: rotate(90deg);
+}
+
+.mediumSize .triangle {
+  width: 0.9rem;
+}
+
+.smallSize .triangle {
+  width: 0.6rem;
+}

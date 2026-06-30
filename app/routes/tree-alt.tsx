@@ -9,11 +9,18 @@ export function meta({ params }: Route.MetaArgs) {
 
 export async function loader({ params, request }: Route.LoaderArgs) {
   const { author } = params;
-  const [sites, articles] = await Promise.all([
-    listSites(author, request.signal),
-    listArticles(author, request.signal),
-  ]);
-  return { author, sites, articles };
+  try {
+    const [sites, articles] = await Promise.all([
+      listSites(author, request.signal),
+      listArticles(author, request.signal),
+    ]);
+    return { author, sites, articles };
+  } catch (e) {
+    if (e instanceof Error && e.message.includes("Bad Request")) {
+      throw new Response("Not Found", { status: 404 });
+    }
+    throw e;
+  }
 }
 
 export default function AuthorTreeAltRoute() {

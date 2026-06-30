@@ -35,9 +35,14 @@ body {
     "Segoe UI",
     sans-serif;
   font-optical-sizing: auto;
-  color: #111827;
   background: #fff;
   -webkit-font-smoothing: antialiased;
+
+  overflow: hidden;
+}
+main {
+  overflow: scroll;
+  height: calc(100dvh - 7rem);
 }
 
 a {

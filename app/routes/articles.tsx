@@ -1,5 +1,6 @@
-import { useLoaderData, Link } from "react-router";
-import { listSites, listArticles, slugFromUri } from "@scribe-atp/core";
+import { useLoaderData } from "react-router";
+import { listSites, listArticles } from "@scribe-atp/core";
+import { ArticleItem } from "~/components/ArticleItem/ArticleItem";
 import { tagArticles } from "~/lib/tagArticles";
 import type { ArticleState } from "~/lib/tagArticles";
 import type { Route } from "./+types/articles";
@@ -19,18 +20,6 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   return { author, articles: tagArticles(sites, articles) };
 }
 
-const stateLabel: Record<ArticleState, string> = {
-  published: "Published",
-  unpublished: "Unpublished",
-  draft: "Draft",
-};
-
-const stateBadgeClass: Record<ArticleState, string> = {
-  published: styles.badgePublished,
-  unpublished: styles.badgeUnpublished,
-  draft: styles.badgeDraft,
-};
-
 export default function ArticlesRoute() {
   const { author, articles } = useLoaderData<typeof loader>();
 
@@ -46,29 +35,25 @@ export default function ArticlesRoute() {
 
   return (
     <main className={styles.page}>
-      <h1 className={styles.title}>
-        All articles by <span className={styles.handle}>{author}</span>
-      </h1>
-      <ul className={styles.list}>
-        {articles.map((article) => (
-          <li key={article.uri} className={styles.item}>
-            <span className={`${styles.badge} ${stateBadgeClass[article.state]}`}>
-              {stateLabel[article.state]}
-            </span>
-            <div className={styles.itemBody}>
-              <Link
-                to={`/${author}/site.standard.document/${slugFromUri(article.uri)}`}
-                className={styles.link}
-              >
-                {article.title}
-              </Link>
-              {article.description && (
-                <p className={styles.synopsis}>{article.description}</p>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.pageContainer}>
+        <h1 className={styles.title}>
+          All articles by <span className={styles.handle}>{author}</span>
+        </h1>
+        <ul className={styles.list}>
+          {articles.map((article) => (
+            <li key={article.uri} className={styles.item}>
+              <div className={styles.itemBody}>
+                <ArticleItem
+                  article={article}
+                  author={author}
+                  showDescription
+                  state={article.state}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </main>
   );
 }

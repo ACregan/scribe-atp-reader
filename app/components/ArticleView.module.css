@@ -65,9 +65,15 @@
   margin-bottom: 0.5em;
 }
 
-.articleBody h1 { font-size: 1.75em; }
-.articleBody h2 { font-size: 1.4em; }
-.articleBody h3 { font-size: 1.2em; }
+.articleBody h1 {
+  font-size: 1.75em;
+}
+.articleBody h2 {
+  font-size: 1.4em;
+}
+.articleBody h3 {
+  font-size: 1.2em;
+}
 
 .articleBody a {
   text-decoration: underline;
