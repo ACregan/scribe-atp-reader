@@ -19,6 +19,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script
+          defer
+          src="https://analytics.perpetualsummer.ltd/script.js"
+          data-website-id="e2980095-6518-43a3-8db9-513952f2a37b"
+        ></script>
       </head>
       <body>
         {children}
