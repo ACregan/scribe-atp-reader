@@ -1,0 +1,39 @@
+.link {
+  font-size: 1.6rem;
+  color: #111;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.description {
+  font-size: 1.3rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  margin-left: 0.75rem;
+  vertical-align: middle;
+}
+
+.badgePublished {
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.badgeUnpublished {
+  background: #fefce8;
+  color: #a16207;
+}
+
+.badgeDraft {
+  background: #f3f4f6;
+  color: #6b7280;
+}

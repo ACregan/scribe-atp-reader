@@ -1,30 +1,26 @@
-.page {
-  padding: 2rem 1.5rem;
+.site {
+  margin-bottom: 1rem;
+  min-width: 70rem;
+}
+
+.toggle {
+  flex-shrink: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
 }
 
-.pageContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  min-width: 70rem;
-  padding: 1rem 0;
-}
-
-.siteNameContainer {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  padding: 0.5rem 1rem;
 }
 
-.title {
+.name {
   font-size: 3rem;
   font-weight: 700;
   color: #111;
-  margin-bottom: 0.5rem;
+  margin-left: 1rem;
 }
 
 .url {

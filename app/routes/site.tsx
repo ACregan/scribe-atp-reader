@@ -1,6 +1,7 @@
 import { useLoaderData } from "react-router";
 import { fetchSite } from "@scribe-atp/core";
-import { GroupNode, ArticleLink } from "~/components/Tree";
+import { GroupItem } from "~/components/GroupItem/GroupItem";
+import { ArticleItem } from "~/components/ArticleItem/ArticleItem";
 import type { Route } from "./+types/site";
 import styles from "./site.module.css";
 
@@ -18,25 +19,31 @@ export default function SiteRoute() {
   const { author, site } = useLoaderData<typeof loader>();
   return (
     <main className={styles.page}>
-      <h1 className={styles.title}>{site.title}</h1>
-      <p className={styles.url}>{site.url}</p>
-      <ul className={styles.list}>
-        {site.groups.map((group) => (
-          <GroupNode key={group.slug} group={group} author={author} />
-        ))}
-        {site.ungroupedArticles.length > 0 && (
-          <li className={styles.unpublishedSection}>
-            <span className={styles.unpublishedLabel}>Unpublished Articles</span>
-            <ul className={styles.unpublishedList}>
-              {site.ungroupedArticles.map((a) => (
-                <li key={a.uri} className={styles.unpublishedItem}>
-                  <ArticleLink article={a} author={author} />
-                </li>
-              ))}
-            </ul>
-          </li>
-        )}
-      </ul>
+      <div className={styles.pageContainer}>
+        <div className={styles.siteNameContainer}>
+          <h1 className={styles.title}>{site.title}</h1>
+          <p className={styles.url}>{site.url}</p>
+        </div>
+        <ul className={styles.list}>
+          {site.groups.map((group) => (
+            <GroupItem key={group.slug} group={group} author={author} />
+          ))}
+          {site.ungroupedArticles.length > 0 && (
+            <li className={styles.unpublishedSection}>
+              <span className={styles.unpublishedLabel}>
+                Unpublished Articles
+              </span>
+              <ul className={styles.unpublishedList}>
+                {site.ungroupedArticles.map((a) => (
+                  <li key={a.uri} className={styles.unpublishedItem}>
+                    <ArticleItem article={a} author={author} />
+                  </li>
+                ))}
+              </ul>
+            </li>
+          )}
+        </ul>
+      </div>
     </main>
   );
 }

@@ -1,12 +1,21 @@
 .page {
-  max-width: 42rem;
-  margin: 0 auto;
   padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 70rem;
+  padding: 1rem 0;
 }
 
 .title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 2.4rem;
+  font-weight: 500;
   margin-bottom: 1.5rem;
 }
 
@@ -20,6 +29,7 @@
 
 .list {
   padding: 0;
+  width: 100%;
 }
 
 .item {
@@ -30,23 +40,7 @@
 }
 
 .itemBody {
-  flex: 1;
-}
-
-.link {
-  color: #111;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
-.synopsis {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-top: 0.125rem;
+  /* flex: 1; */
 }
 
 .badge {
