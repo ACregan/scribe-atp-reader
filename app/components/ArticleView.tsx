@@ -44,9 +44,9 @@ export function ArticleView({
           </a>
         </div>
       )}
-      {article.splashImageUrl && (
+      {article.coverImageUrl && (
         <img
-          src={article.splashImageUrl}
+          src={article.coverImageUrl}
           alt=""
           className={styles.splashImage}
         />
