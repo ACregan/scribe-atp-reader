@@ -3,14 +3,14 @@ import { tagArticles } from "./tagArticles";
 import type { SiteRecord, ArticleRef } from "@scribe-atp/core";
 
 const makeArticle = (rkey: string): ArticleRef => ({
-  uri: `at://did:plc:author/app.scribe.article/${rkey}`,
+  uri: `at://did:plc:author/site.standard.document/${rkey}`,
   title: `Article ${rkey}`,
   splashImageUrl: null,
   createdAt: "2024-01-01T00:00:00Z",
 });
 
 const makeSite = (published: string[], unpublished: string[]): SiteRecord => ({
-  uri: "at://did:plc:author/app.scribe.site/site1",
+  uri: "at://did:plc:author/site.standard.publication/site1",
   title: "My Site",
   url: "mysite.com",
   urlPrefix: "",
@@ -64,7 +64,7 @@ describe("tagArticles", () => {
 
   it("preserves all article fields", () => {
     const article: ArticleRef = {
-      uri: "at://did:plc:author/app.scribe.article/rkey1",
+      uri: "at://did:plc:author/site.standard.document/rkey1",
       title: "My Article",
       description: "A description",
       splashImageUrl: null,

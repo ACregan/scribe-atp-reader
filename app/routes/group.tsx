@@ -21,11 +21,11 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   const site = await fetchSite(author, `https://${siteDomain}`, request.signal);
   const group = site.groups.find((g) => g.slug === groupSlug);
   if (!group) throw data("Group not found", { status: 404 });
-  return { author, site, group };
+  return { author, site, group, siteDomain, groupSlug };
 }
 
 export default function GroupRoute() {
-  const { author, site, group } = useLoaderData<typeof loader>();
+  const { author, site, group, siteDomain, groupSlug } = useLoaderData<typeof loader>();
   return (
     <main className={styles.page}>
       <div className={styles.pageContainer}>
@@ -34,7 +34,13 @@ export default function GroupRoute() {
         <ul className={styles.list}>
           {group.articles.map((article) => (
             <li key={article.uri} className={styles.item}>
-              <ArticleItem article={article} author={author} showDescription />
+              <ArticleItem
+                article={article}
+                author={author}
+                showDescription
+                siteDomain={siteDomain}
+                groupSlug={groupSlug}
+              />
             </li>
           ))}
         </ul>
