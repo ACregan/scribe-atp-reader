@@ -85,6 +85,10 @@ URLs use the current collection names. The input accepts handles, DIDs, and full
 
 `:author` is always a handle or DID — whichever the user entered. No normalisation applied.
 
+## Design decisions
+
+**No social buttons.** The Reader is a navigator and preview tool — it browses any author's content by handle or DID. `@scribe-atp/social` is intentionally absent. Social engagement belongs on the author's own consumer sites, not on a neutral third-party browser. Do not add LikeButton, SubscribeButton, or ShareButton.
+
 ## Stack
 
 - React Router v7 (framework / server mode) — same pattern as norobots.blog, anthonycregan.co.uk
