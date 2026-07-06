@@ -44,6 +44,19 @@
   margin-bottom: 2rem;
   line-height: 1.625;
 }
+
+.meta {
+  font-size: 0.85rem;
+  color: var(--sl-color-gray-3, #888);
+  margin-bottom: 1rem;
+}
+
+.bskyLink {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
 .articleBody {
   font-size: 1.6rem;
   font-weight: normal;

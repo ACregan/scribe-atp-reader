@@ -97,6 +97,6 @@ GitLab CI → SSH pull-deploy → VPS. Same pattern as all other consumer sites.
 
 - App name in `deploy.config.sh`: `scribe-atp-reader`
 - PM2 job name: `scribe-atp-reader`
-- Port: TBD (next available after 3009)
+- Port: 3010
 - Domain: `reader.scribe-atp.app`
 - nginx: proxy_pass to PM2 port, standard security headers

@@ -9,6 +9,8 @@ interface Props {
   author: string;
   showDescription?: boolean;
   state?: ArticleState;
+  siteDomain?: string;
+  groupSlug?: string;
 }
 
 const stateLabel: Record<ArticleState, string> = {
@@ -28,13 +30,20 @@ export function ArticleItem({
   author,
   showDescription = false,
   state,
+  siteDomain,
+  groupSlug,
 }: Props) {
   const rkey = slugFromUri(article.uri);
+
+  const to =
+    siteDomain && groupSlug
+      ? `/${author}/site.standard.publication/${siteDomain}/${groupSlug}/${rkey}`
+      : `/${author}/site.standard.document/${rkey}`;
 
   return (
     <>
       <Link
-        to={`/${author}/site.standard.document/${rkey}`}
+        to={to}
         className={styles.link}
       >
         {article.title}

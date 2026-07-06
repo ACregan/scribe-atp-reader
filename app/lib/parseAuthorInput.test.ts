@@ -20,8 +20,8 @@ describe("parseAuthorInput", () => {
 
   it("strips at:// and preserves the collection path", () => {
     expect(
-      parseAuthorInput("at://did:plc:abc123/app.scribe.article/rkey1")
-    ).toBe("did:plc:abc123/app.scribe.article/rkey1");
+      parseAuthorInput("at://did:plc:abc123/site.standard.document/rkey1")
+    ).toBe("did:plc:abc123/site.standard.document/rkey1");
   });
 
   it("returns empty string for empty input", () => {
