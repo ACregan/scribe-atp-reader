@@ -1,6 +1,8 @@
 import { useLoaderData } from "react-router";
-import { fetchArticle, fetchSite, slugFromUri } from "@scribe-atp/core";
+import { fetchArticle, fetchSite } from "@scribe-atp/core";
 import { ArticleView } from "~/components/ArticleView";
+import { findPublishedOnInGroup } from "~/lib/publishedOn";
+import { withNotFound } from "~/lib/withNotFound";
 import type { Route } from "./+types/article-site";
 
 export function meta({ data }: Route.MetaArgs) {
@@ -9,22 +11,14 @@ export function meta({ data }: Route.MetaArgs) {
 
 export async function loader({ params, request }: Route.LoaderArgs) {
   const { author, siteDomain, groupSlug, articleRkey } = params;
-  const [article, site] = await Promise.all([
-    fetchArticle(author, articleRkey, request.signal),
-    fetchSite(author, `https://${siteDomain}`, request.signal),
-  ]);
+  const [article, site] = await withNotFound(() =>
+    Promise.all([
+      fetchArticle(author, articleRkey, request.signal),
+      fetchSite(author, `https://${siteDomain}`, request.signal),
+    ]),
+  );
 
-  const group = site.groups.find((g) => g.slug === groupSlug);
-  const ref = group?.articles.find((a) => slugFromUri(a.uri) === articleRkey);
-  const prefix = site.urlPrefix ? `/${site.urlPrefix}` : "";
-  const publishedOn = ref
-    ? {
-        title: site.title,
-        canonicalUrl: `https://${site.url}${prefix}/${groupSlug}/${ref.slug ?? articleRkey}`,
-      }
-    : null;
-
-  return { article, publishedOn };
+  return { article, publishedOn: findPublishedOnInGroup(site, groupSlug, articleRkey) };
 }
 
 export default function ArticleSiteRoute({ params }: Route.ComponentProps) {
