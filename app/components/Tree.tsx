@@ -1,6 +1,7 @@
 import type { SiteRecord, ArticleRef } from "@scribe-atp/core";
 import { SiteItem } from "./SiteItem/SiteItem";
 import { ArticleItem } from "./ArticleItem/ArticleItem";
+import { tagArticles } from "~/lib/tagArticles";
 import styles from "./Tree.module.css";
 
 interface AuthorTreeProps {
@@ -10,15 +11,7 @@ interface AuthorTreeProps {
 }
 
 export function AuthorTree({ author, sites, articles }: AuthorTreeProps) {
-  const referencedUris = new Set(
-    sites
-      .flatMap((s) => [
-        ...s.groups.flatMap((g) => g.articles),
-        ...s.ungroupedArticles,
-      ])
-      .map((a) => a.uri),
-  );
-  const drafts = articles.filter((a) => !referencedUris.has(a.uri));
+  const drafts = tagArticles(sites, articles).filter((a) => a.state === "draft");
 
   if (sites.length === 0 && articles.length === 0) {
     return (
