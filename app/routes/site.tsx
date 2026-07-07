@@ -2,6 +2,7 @@ import { useLoaderData } from "react-router";
 import { fetchSite } from "@scribe-atp/core";
 import { GroupItem } from "~/components/GroupItem/GroupItem";
 import { ArticleItem } from "~/components/ArticleItem/ArticleItem";
+import { withNotFound } from "~/lib/withNotFound";
 import type { Route } from "./+types/site";
 import styles from "./site.module.css";
 
@@ -11,7 +12,7 @@ export function meta({ data }: Route.MetaArgs) {
 
 export async function loader({ params, request }: Route.LoaderArgs) {
   const { author, siteDomain } = params;
-  const site = await fetchSite(author, `https://${siteDomain}`, request.signal);
+  const site = await withNotFound(() => fetchSite(author, `https://${siteDomain}`, request.signal));
   return { author, site };
 }
 
