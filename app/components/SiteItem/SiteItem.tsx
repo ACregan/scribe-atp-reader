@@ -3,7 +3,6 @@ import { Link } from "react-router";
 import type { SiteRecord } from "@scribe-atp/core";
 import { CollapseIndicator } from "../CollapseIndicator";
 import { GroupItem } from "../GroupItem/GroupItem";
-import { ArticleItem } from "../ArticleItem/ArticleItem";
 import styles from "./SiteItem.module.css";
 
 interface Props {
@@ -33,18 +32,6 @@ export function SiteItem({ site, author }: Props) {
           {site.groups.map((group) => (
             <GroupItem key={group.slug} group={group} author={author} />
           ))}
-          {site.ungroupedArticles.length > 0 && (
-            <li className={styles.unpublishedSection}>
-              <span className={styles.unpublishedLabel}>Unpublished Articles</span>
-              <ul className={styles.unpublishedList}>
-                {site.ungroupedArticles.map((a) => (
-                  <li key={a.uri} className={styles.unpublishedItem}>
-                    <ArticleItem article={a} author={author} />
-                  </li>
-                ))}
-              </ul>
-            </li>
-          )}
         </ul>
       )}
     </div>

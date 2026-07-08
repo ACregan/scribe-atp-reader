@@ -1,7 +1,6 @@
 import { useLoaderData } from "react-router";
 import { fetchSite } from "@scribe-atp/core";
 import { GroupItem } from "~/components/GroupItem/GroupItem";
-import { ArticleItem } from "~/components/ArticleItem/ArticleItem";
 import { withNotFound } from "~/lib/withNotFound";
 import type { Route } from "./+types/site";
 import styles from "./site.module.css";
@@ -29,20 +28,6 @@ export default function SiteRoute() {
           {site.groups.map((group) => (
             <GroupItem key={group.slug} group={group} author={author} />
           ))}
-          {site.ungroupedArticles.length > 0 && (
-            <li className={styles.unpublishedSection}>
-              <span className={styles.unpublishedLabel}>
-                Unpublished Articles
-              </span>
-              <ul className={styles.unpublishedList}>
-                {site.ungroupedArticles.map((a) => (
-                  <li key={a.uri} className={styles.unpublishedItem}>
-                    <ArticleItem article={a} author={author} />
-                  </li>
-                ))}
-              </ul>
-            </li>
-          )}
         </ul>
       </div>
     </main>
