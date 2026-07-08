@@ -6,7 +6,7 @@ import SvgIcon, { SvgImageList } from "./SvgIcon/SvgIcon";
 import "@scribe-atp/styles";
 
 function bskyPostUrl(atUri: string): string {
-  const parts = atUri.split('/');
+  const parts = atUri.split("/");
   return `https://bsky.app/profile/${parts[2]}/post/${parts[4]}`;
 }
 
@@ -35,48 +35,52 @@ export function ArticleView({
 
   return (
     <article className={styles.article}>
-      <div className={styles.backTop}>{backLink}</div>
-      {publishedOn && (
-        <div className={styles.publishedBanner}>
-          This Article is published on{" "}
+      <div className={styles.articleWrapper}>
+        <div className={styles.backTop}>{backLink}</div>
+        {publishedOn && (
+          <div className={styles.publishedBanner}>
+            This Article is published on{" "}
+            <a
+              href={publishedOn.canonicalUrl}
+              className={styles.publishedBannerLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {publishedOn.title}
+            </a>
+          </div>
+        )}
+        {article.coverImageUrl && (
+          <img
+            src={article.coverImageUrl}
+            alt=""
+            className={styles.splashImage}
+          />
+        )}
+        <h1 className={styles.title}>{article.title}</h1>
+        {article.description && (
+          <p className={styles.synopsis}>{article.description}</p>
+        )}
+        {(() => {
+          const wordCount =
+            article.textContent?.trim().split(/\s+/).filter(Boolean).length ??
+            0;
+          const readingTime = Math.max(1, Math.round(wordCount / 225));
+          return <p className={styles.meta}>{readingTime} min read</p>;
+        })()}
+        {article.bskyPostRef && (
           <a
-            href={publishedOn.canonicalUrl}
-            className={styles.publishedBannerLink}
+            href={bskyPostUrl(article.bskyPostRef.uri)}
+            className={styles.bskyLink}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {publishedOn.title}
+            View discussion on Bluesky ↗
           </a>
-        </div>
-      )}
-      {article.coverImageUrl && (
-        <img
-          src={article.coverImageUrl}
-          alt=""
-          className={styles.splashImage}
-        />
-      )}
-      <h1 className={styles.title}>{article.title}</h1>
-      {article.description && (
-        <p className={styles.synopsis}>{article.description}</p>
-      )}
-      {(() => {
-        const wordCount = article.textContent?.trim().split(/\s+/).filter(Boolean).length ?? 0;
-        const readingTime = Math.max(1, Math.round(wordCount / 225));
-        return <p className={styles.meta}>{readingTime} min read</p>;
-      })()}
-      {article.bskyPostRef && (
-        <a
-          href={bskyPostUrl(article.bskyPostRef.uri)}
-          className={styles.bskyLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          View discussion on Bluesky ↗
-        </a>
-      )}
-      <ScribeContent html={article.content} className={styles.articleBody} />
-      <div className={styles.backBottom}>{backLink}</div>
+        )}
+        <ScribeContent html={article.content} className={styles.articleBody} />
+        <div className={styles.backBottom}>{backLink}</div>
+      </div>
     </article>
   );
 }

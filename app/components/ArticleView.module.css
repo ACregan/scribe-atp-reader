@@ -1,4 +1,9 @@
 .article {
+  height: calc(100dvh - 8rem);
+  overflow: scroll;
+  overflow-x: auto;
+}
+.articleWrapper {
   max-width: 80rem;
   margin: 0 auto;
   padding: 2rem 1.5rem;
