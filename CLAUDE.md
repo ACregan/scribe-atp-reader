@@ -8,15 +8,16 @@ A user enters an AT Protocol handle or DID. The Reader resolves it, fetches all 
 
 No auth. No login. AT Protocol repos are publicly readable; the Reader reflects that.
 
-## Three article states
+## Article states
 
-Every article is in one of three states. The Reader must handle all three:
+**Revised by the Scribe CMS's ADR 0013 (2026-07-08).** Every article is now in one of two states, not three — the Reader should treat any encounter with the third, legacy state as a data artifact from before that change, not a state to design new UI around:
 
 | State | Definition | Where it appears in the tree | Banner? |
 |-------|------------|------------------------------|---------|
 | **Draft** | On PDS, not referenced in any Site record | "Draft Articles by @handle" section at the bottom of the tree | No |
-| **Unpublished** | In a Site's `ungroupedArticles` | "Unpublished Articles" section under its Site | No |
 | **Published** | In a Group on a Site | Under its Group, under its Site | Yes — "This article is published on [Site Title]" with link to canonical URL |
+
+**Legacy: Unpublished** (`ungroupedArticles` entries) — the old middle state, an article assigned to a Site but not yet placed in a Group. No current Scribe CMS write path can produce this anymore; assigning to a Site and placing in a Group now happen together in one Publish step. The Reader's "Unpublished Articles" per-site tree section (`site.tsx`, `SiteItem.tsx`) still exists and is still correct if it ever encounters old data with a non-empty `ungroupedArticles`, but expect it to render nothing for any current content — it's effectively inert going forward, not deleted code.
 
 ## Navigation tree structure
 
@@ -25,14 +26,14 @@ SITE: alice.example.com
   ├── Group: Writing
   │   ├── Article: My first post        ← Published
   │   └── Article: Six months in        ← Published
-  ├── Group: Projects
-  │   └── Article: Building a thing     ← Published
-  └── Unpublished Articles
-      └── Article: Work in progress     ← Unpublished
+  └── Group: Projects
+      └── Article: Building a thing     ← Published
 
 Draft Articles by @alice.bsky.social
   └── Article: Notes to self            ← Draft (no site)
 ```
+
+(A "Unpublished Articles" section may still appear under a Site if that Site's `ungroupedArticles` is non-empty — see the legacy note above — but this should not occur for any content published since ADR 0013.)
 
 Sites and Groups are collapsible. The tree is the primary navigation — there is no separate article index page.
 
