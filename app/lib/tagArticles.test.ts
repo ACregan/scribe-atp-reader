@@ -9,7 +9,7 @@ const makeArticle = (rkey: string): ArticleRef => ({
   createdAt: "2024-01-01T00:00:00Z",
 });
 
-const makeSite = (published: string[], unpublished: string[]): SiteRecord => ({
+const makeSite = (published: string[]): SiteRecord => ({
   uri: "at://did:plc:author/site.standard.publication/site1",
   title: "My Site",
   url: "mysite.com",
@@ -21,18 +21,15 @@ const makeSite = (published: string[], unpublished: string[]): SiteRecord => ({
       articles: published.map(makeArticle),
     },
   ],
-  ungroupedArticles: unpublished.map(makeArticle),
+  // Legacy field, always empty for current content — see this file's own
+  // ArticleState comment and scribe-atp.app's ADR 0013.
+  ungroupedArticles: [],
 });
 
 describe("tagArticles", () => {
   it("tags a published article", () => {
-    const result = tagArticles([makeSite(["pub1"], [])], [makeArticle("pub1")]);
+    const result = tagArticles([makeSite(["pub1"])], [makeArticle("pub1")]);
     expect(result[0].state).toBe("published");
-  });
-
-  it("tags an unpublished article", () => {
-    const result = tagArticles([makeSite([], ["unpub1"])], [makeArticle("unpub1")]);
-    expect(result[0].state).toBe("unpublished");
   });
 
   it("tags a draft article", () => {
@@ -40,26 +37,36 @@ describe("tagArticles", () => {
     expect(result[0].state).toBe("draft");
   });
 
-  it("handles a mix of all three states", () => {
-    const site = makeSite(["pub1"], ["unpub1"]);
+  it("handles a mix of both states", () => {
+    const site = makeSite(["pub1"]);
     const result = tagArticles([site], [
       makeArticle("pub1"),
-      makeArticle("unpub1"),
       makeArticle("draft1"),
     ]);
     expect(result.find((a) => a.uri.endsWith("pub1"))?.state).toBe("published");
-    expect(result.find((a) => a.uri.endsWith("unpub1"))?.state).toBe("unpublished");
     expect(result.find((a) => a.uri.endsWith("draft1"))?.state).toBe("draft");
+  });
+
+  it("ignores a legacy non-empty ungroupedArticles — no longer a distinct state", () => {
+    const site: SiteRecord = {
+      ...makeSite(["pub1"]),
+      ungroupedArticles: [makeArticle("legacy-unpub")],
+    };
+    const result = tagArticles([site], [
+      makeArticle("pub1"),
+      makeArticle("legacy-unpub"),
+    ]);
+    expect(result.find((a) => a.uri.endsWith("pub1"))?.state).toBe("published");
+    expect(result.find((a) => a.uri.endsWith("legacy-unpub"))?.state).toBe("draft");
   });
 
   it("handles articles spread across multiple sites", () => {
     const result = tagArticles(
-      [makeSite(["pub1"], []), makeSite(["pub2"], ["unpub1"])],
-      [makeArticle("pub1"), makeArticle("pub2"), makeArticle("unpub1")]
+      [makeSite(["pub1"]), makeSite(["pub2"])],
+      [makeArticle("pub1"), makeArticle("pub2")]
     );
     expect(result[0].state).toBe("published");
     expect(result[1].state).toBe("published");
-    expect(result[2].state).toBe("unpublished");
   });
 
   it("preserves all article fields", () => {

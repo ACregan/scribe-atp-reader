@@ -15,13 +15,11 @@ interface Props {
 
 const stateLabel: Record<ArticleState, string> = {
   published: "Published",
-  unpublished: "Unpublished",
   draft: "Draft",
 };
 
 const stateBadgeClass: Record<ArticleState, string> = {
   published: styles.badgePublished,
-  unpublished: styles.badgeUnpublished,
   draft: styles.badgeDraft,
 };
 

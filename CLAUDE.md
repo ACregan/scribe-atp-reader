@@ -10,14 +10,14 @@ No auth. No login. AT Protocol repos are publicly readable; the Reader reflects 
 
 ## Article states
 
-**Revised by the Scribe CMS's ADR 0013 (2026-07-08).** Every article is now in one of two states, not three — the Reader should treat any encounter with the third, legacy state as a data artifact from before that change, not a state to design new UI around:
+**Revised by the Scribe CMS's ADR 0013 (2026-07-08).** Every article is in one of two states:
 
 | State | Definition | Where it appears in the tree | Banner? |
 |-------|------------|------------------------------|---------|
 | **Draft** | On PDS, not referenced in any Site record | "Draft Articles by @handle" section at the bottom of the tree | No |
 | **Published** | In a Group on a Site | Under its Group, under its Site | Yes — "This article is published on [Site Title]" with link to canonical URL |
 
-**Legacy: Unpublished** (`ungroupedArticles` entries) — the old middle state, an article assigned to a Site but not yet placed in a Group. No current Scribe CMS write path can produce this anymore; assigning to a Site and placing in a Group now happen together in one Publish step. The Reader's "Unpublished Articles" per-site tree section (`site.tsx`, `SiteItem.tsx`) still exists and is still correct if it ever encounters old data with a non-empty `ungroupedArticles`, but expect it to render nothing for any current content — it's effectively inert going forward, not deleted code.
+The old middle state ("Unpublished" — assigned to a Site's `ungroupedArticles` but not yet placed in a Group) and the UI that rendered it (a per-site "Unpublished Articles" section in `site.tsx`/`SiteItem.tsx`, and the `"unpublished"` value of `ArticleState` in `tagArticles.ts`) were **removed outright** (2026-07-08) — no current Scribe CMS write path can produce that state anymore, since assigning to a Site and placing in a Group now happen together in one Publish step. `Site.ungroupedArticles` still exists on the SDK type for backwards compatibility, but `tagArticles` no longer reads it at all; anything left in it is treated the same as a plain draft.
 
 ## Navigation tree structure
 
@@ -32,8 +32,6 @@ SITE: alice.example.com
 Draft Articles by @alice.bsky.social
   └── Article: Notes to self            ← Draft (no site)
 ```
-
-(A "Unpublished Articles" section may still appear under a Site if that Site's `ungroupedArticles` is non-empty — see the legacy note above — but this should not occur for any content published since ADR 0013.)
 
 Sites and Groups are collapsible. The tree is the primary navigation — there is no separate article index page.
 
@@ -50,7 +48,7 @@ The Reader uses `@scribe-atp/core`:
 - `fetchSite(author, publicationUrl, signal?)` — fetches a single publication by its full HTTPS URL (e.g. `"https://norobots.blog"`)
 - `fetchArticle(author, rkey, signal?)` — fetches a single `site.standard.document` record by TID rkey
 
-Draft articles = all articles from `listArticles` not referenced in any site's `groups` or `ungroupedArticles`.
+Draft articles = all articles from `listArticles` not referenced in any site's `groups` (see `tagArticles.ts`).
 
 ## URL structure
 
