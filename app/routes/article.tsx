@@ -5,8 +5,8 @@ import { findPublishedOn } from "~/lib/publishedOn";
 import { withNotFound } from "~/lib/withNotFound";
 import type { Route } from "./+types/article";
 
-export function meta({ data }: Route.MetaArgs) {
-  return [{ title: `${data?.article.title ?? "Article"} | Scribe Reader` }];
+export function meta({ loaderData }: Route.MetaArgs) {
+  return [{ title: `${loaderData?.article.title ?? "Article"} | Scribe Reader` }];
 }
 
 export async function loader({ params, request }: Route.LoaderArgs) {
