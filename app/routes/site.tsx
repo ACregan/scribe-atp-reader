@@ -5,8 +5,8 @@ import { withNotFound } from "~/lib/withNotFound";
 import type { Route } from "./+types/site";
 import styles from "./site.module.css";
 
-export function meta({ data }: Route.MetaArgs) {
-  return [{ title: `${data?.site.title ?? "Site"} | Scribe Reader` }];
+export function meta({ loaderData }: Route.MetaArgs) {
+  return [{ title: `${loaderData?.site.title ?? "Site"} | Scribe Reader` }];
 }
 
 export async function loader({ params, request }: Route.LoaderArgs) {

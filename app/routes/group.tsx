@@ -5,9 +5,9 @@ import { withNotFound } from "~/lib/withNotFound";
 import type { Route } from "./+types/group";
 import styles from "./group.module.css";
 
-export function meta({ data: d }: Route.MetaArgs) {
-  const group = d?.group;
-  const site = d?.site;
+export function meta({ loaderData }: Route.MetaArgs) {
+  const group = loaderData?.group;
+  const site = loaderData?.site;
   return [
     {
       title: group
