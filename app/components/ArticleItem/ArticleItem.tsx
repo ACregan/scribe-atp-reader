@@ -1,8 +1,8 @@
 import { Link } from "react-router";
-import { slugFromUri } from "@scribe-atp/core";
 import type { ArticleRef } from "@scribe-atp/core";
 import styles from "./ArticleItem.module.css";
 import type { ArticleState } from "~/lib/tagArticles";
+import { buildArticleHref } from "~/lib/buildArticleHref";
 
 interface Props {
   article: ArticleRef;
@@ -31,12 +31,7 @@ export function ArticleItem({
   siteDomain,
   groupSlug,
 }: Props) {
-  const rkey = slugFromUri(article.uri);
-
-  const to =
-    siteDomain && groupSlug
-      ? `/${author}/site.standard.publication/${siteDomain}/${groupSlug}/${rkey}`
-      : `/${author}/site.standard.document/${rkey}`;
+  const to = buildArticleHref(author, article.uri, siteDomain, groupSlug);
 
   return (
     <>

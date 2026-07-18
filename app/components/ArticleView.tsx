@@ -3,12 +3,8 @@ import type { Article } from "@scribe-atp/core";
 import { ScribeContent } from "@scribe-atp/react";
 import styles from "./ArticleView.module.css";
 import SvgIcon, { SvgImageList } from "./SvgIcon/SvgIcon";
+import { bskyPostUrl, readingTimeMinutes } from "~/lib/articleMeta";
 import "@scribe-atp/styles";
-
-function bskyPostUrl(atUri: string): string {
-  const parts = atUri.split("/");
-  return `https://bsky.app/profile/${parts[2]}/post/${parts[4]}`;
-}
 
 interface PublishedOn {
   title: string;
@@ -61,13 +57,7 @@ export function ArticleView({
         {article.description && (
           <p className={styles.synopsis}>{article.description}</p>
         )}
-        {(() => {
-          const wordCount =
-            article.textContent?.trim().split(/\s+/).filter(Boolean).length ??
-            0;
-          const readingTime = Math.max(1, Math.round(wordCount / 225));
-          return <p className={styles.meta}>{readingTime} min read</p>;
-        })()}
+        <p className={styles.meta}>{readingTimeMinutes(article.textContent)} min read</p>
         {article.bskyPostRef && (
           <a
             href={bskyPostUrl(article.bskyPostRef.uri)}
