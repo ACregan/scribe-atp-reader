@@ -3,8 +3,8 @@
   display: grid;
   grid-template-columns: 1fr 50rem 1fr;
   align-items: center;
-  height: 8rem;
-  box-shadow: 0 -20px 6px -20px rgba(0, 0, 0, 0.5) inset;
+  height: 6rem;
+  box-shadow: 0 -20px 6px -20px rgba(0, 0, 0, 0.1) inset;
   border-bottom: 0.1rem solid #dedede;
 }
 
@@ -23,10 +23,10 @@
   padding-left: 3rem;
 }
 .scribeReaderIcon {
-  height: 3rem;
+  height: 2.4rem;
 }
 .linksContainer {
-  padding: 3rem 4rem;
+  padding: 0 4rem;
   display: flex;
   gap: 4rem;
 }
