@@ -1,6 +1,6 @@
 # scribe-atp-reader
 
-Scribe Reader — a publicly accessible browser for any Scribe author's content. React Router v7 (framework mode), served at `reader.scribe-atp.app`.
+Scribe Reader — a publicly accessible browser for any Scribe author's content. React Router v8 (framework mode), served at `reader.scribe-atp.app`.
 
 ## What it does
 
@@ -90,7 +90,7 @@ URLs use the current collection names. The input accepts handles, DIDs, and full
 
 ## Stack
 
-- React Router v7 (framework / server mode) — same pattern as norobots.blog, anthonycregan.co.uk
+- React Router v8 (framework / server mode) — same pattern as norobots.blog, anthonycregan.co.uk
 - `@scribe-atp/core` — all data fetching; no other adapter needed (server loaders)
 - TypeScript strict mode
 
