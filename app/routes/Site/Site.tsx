@@ -1,8 +1,8 @@
 import { useLoaderData } from "react-router";
 import { GroupItem } from "~/components/GroupItem/GroupItem";
 import { loadSite } from "~/lib/loadSite.server";
-import type { Route } from "./+types/site";
-import styles from "./site.module.css";
+import type { Route } from "./+types/Site";
+import styles from "./Site.module.css";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [{ title: `${loaderData?.site.title ?? "Site"} | Scribe Reader` }];

@@ -4,7 +4,7 @@ import { ArticleView } from "~/components/ArticleView";
 import { findPublishedOnInGroup } from "~/lib/publishedOn";
 import { loadSite } from "~/lib/loadSite.server";
 import { withNotFound } from "~/lib/withNotFound";
-import type { Route } from "./+types/article-site";
+import type { Route } from "./+types/ArticleSite";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [{ title: `${loaderData?.article.title ?? "Article"} | Scribe Reader` }];

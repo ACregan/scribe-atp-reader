@@ -1,4 +1,4 @@
-import styles from "./home.module.css";
+import styles from "./Home.module.css";
 import SvgIcon, { SvgImageList } from "~/components/SvgIcon/SvgIcon";
 import { SearchBar } from "~/components/SearchBar/SearchBar";
 import { Link } from "react-router";

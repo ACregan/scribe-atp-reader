@@ -1,8 +1,8 @@
 import { data, useLoaderData } from "react-router";
 import { ArticleItem } from "~/components/ArticleItem/ArticleItem";
 import { loadSite } from "~/lib/loadSite.server";
-import type { Route } from "./+types/group";
-import styles from "./group.module.css";
+import type { Route } from "./+types/Group";
+import styles from "./Group.module.css";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   const group = loaderData?.group;

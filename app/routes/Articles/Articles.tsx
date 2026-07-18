@@ -3,8 +3,8 @@ import { listSites, listArticles } from "@scribe-atp/core";
 import { ArticleItem } from "~/components/ArticleItem/ArticleItem";
 import { tagArticles } from "~/lib/tagArticles";
 import type { ArticleState } from "~/lib/tagArticles";
-import type { Route } from "./+types/articles";
-import styles from "./articles.module.css";
+import type { Route } from "./+types/Articles";
+import styles from "./Articles.module.css";
 
 export function meta({ params }: Route.MetaArgs) {
   return [{ title: `All articles by ${params.author} | Scribe Reader` }];

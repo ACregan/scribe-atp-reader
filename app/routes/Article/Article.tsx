@@ -3,7 +3,7 @@ import { fetchArticle, listSites } from "@scribe-atp/core";
 import { ArticleView } from "~/components/ArticleView";
 import { findPublishedOn } from "~/lib/publishedOn";
 import { withNotFound } from "~/lib/withNotFound";
-import type { Route } from "./+types/article";
+import type { Route } from "./+types/Article";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [{ title: `${loaderData?.article.title ?? "Article"} | Scribe Reader` }];

@@ -1,7 +1,7 @@
 import { useLoaderData } from "react-router";
 import { AuthorTree } from "~/components/Tree";
 import { loadAuthorTree } from "~/lib/loadAuthorTree.server";
-import type { Route } from "./+types/tree";
+import type { Route } from "./+types/Tree";
 
 export function meta({ params }: Route.MetaArgs) {
   return [{ title: `${params.author} | Scribe Reader` }];
