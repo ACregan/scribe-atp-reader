@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Architecture review — scribe-atp-reader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+    </script>
+    <style>
+      body { font-family: ui-serif, Georgia, "Times New Roman", serif; }
+      .sans { font-family: ui-sans-serif, system-ui, sans-serif; }
+      .seam { stroke-dasharray: 4 4; }
+      .leak { stroke: #dc2626; }
+      .deep-box {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: #f1f5f9;
+      }
+      .badge {
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-weight: 600;
+        padding: 0.2rem 0.55rem;
+        border-radius: 9999px;
+      }
+      .badge-strong { background: #d1fae5; color: #065f46; }
+      .badge-explore { background: #fef3c7; color: #92400e; }
+      .badge-speculative { background: #e2e8f0; color: #334155; }
+      .file-list { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .diagram-box {
+        height: 300px;
+      }
+      .arrow-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900">
+    <main class="max-w-5xl mx-auto px-6 py-14 space-y-16">
+      <header class="space-y-4 border-b border-slate-300 pb-8">
+        <p class="sans text-xs uppercase tracking-widest text-slate-500">Architecture review</p>
+        <h1 class="text-4xl font-semibold">scribe-atp-reader</h1>
+        <p class="sans text-sm text-slate-500">2026-07-18 · branch feature/general-housekeeping</p>
+        <div class="sans flex flex-wrap gap-x-8 gap-y-2 text-xs text-slate-600 pt-2">
+          <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 border-2 border-slate-400"></span> module</span>
+          <span class="flex items-center gap-2"><span class="inline-block w-4 border-t-2 border-dashed border-slate-400"></span> seam</span>
+          <span class="flex items-center gap-2"><span class="inline-block w-4 border-t-2 border-red-500"></span> leakage</span>
+          <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 deep-box"></span> deep module</span>
+        </div>
+      </header>
+
+      <section id="candidates" class="space-y-16">
+
+        <!-- Candidate 1 -->
+        <article id="c1" class="space-y-5">
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="badge badge-strong">Strong</span>
+            <span class="badge badge-speculative sans">verified — typecheck passes</span>
+            <h2 class="text-2xl font-semibold sans-serif">Collapse the duplicate Author Tree route</h2>
+          </div>
+          <p class="file-list text-sm text-slate-600">app/routes/tree.tsx · app/routes/tree-alt.tsx · app/routes.ts</p>
+
+          <p><span class="font-semibold">Problem.</span> <code class="file-list text-sm">tree.tsx</code> and <code class="file-list text-sm">tree-alt.tsx</code> are byte-identical except for a type import and a function name. Both render the Author Tree module at two seams — <code class="file-list text-sm">/:author</code> and <code class="file-list text-sm">/:author/site.standard.publication</code> — but nothing varies across them. One adapter means a hypothetical seam; here there's only one real implementation wearing two files.</p>
+
+          <p><span class="font-semibold">Solution.</span> Point both route entries in <code class="file-list text-sm">routes.ts</code> at the single file <code class="file-list text-sm">routes/tree.tsx</code>, giving the second entry an explicit <code class="file-list text-sm">id</code> (React Router derives route ids from the file path, so a bare second reference collides). Delete <code class="file-list text-sm">tree-alt.tsx</code>. Confirmed with <code class="file-list text-sm">npm run typecheck</code> — passes clean, one generated <code class="file-list text-sm">+types/tree.ts</code> serves both routes.</p>
+
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <p class="sans text-xs uppercase tracking-wider text-slate-500 mb-2">Before</p>
+              <div class="diagram-box relative border border-slate-300 rounded-lg bg-white p-4 flex flex-col justify-center gap-6">
+                <div class="border-2 border-slate-400 rounded p-3 text-center">
+                  <p class="sans text-xs uppercase tracking-wider text-slate-500">tree.tsx</p>
+                  <p class="text-sm mt-1">loader + AuthorTree</p>
+                  <p class="sans text-xs text-slate-400 mt-1">seam: /:author</p>
+                </div>
+                <div class="border-2 border-slate-400 rounded p-3 text-center">
+                  <p class="sans text-xs uppercase tracking-wider text-slate-500">tree-alt.tsx</p>
+                  <p class="text-sm mt-1">loader + AuthorTree</p>
+                  <p class="sans text-xs text-slate-400 mt-1">seam: /:author/site.standard.publication</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="sans text-xs uppercase tracking-wider text-slate-500 mb-2">After</p>
+              <div class="diagram-box relative border border-slate-300 rounded-lg bg-white p-4 flex items-center justify-center">
+                <div class="deep-box rounded p-4 text-center w-56">
+                  <p class="sans text-xs uppercase tracking-wider text-slate-300">tree.tsx</p>
+                  <p class="text-sm mt-1">loader + AuthorTree</p>
+                </div>
+                <svg class="arrow-svg" viewBox="0 0 300 300">
+                  <line x1="150" y1="150" x2="60" y2="60" stroke="#64748b" stroke-width="2" stroke-dasharray="4 4"/>
+                  <line x1="150" y1="150" x2="240" y2="60" stroke="#64748b" stroke-width="2" stroke-dasharray="4 4"/>
+                  <text x="20" y="55" class="sans" font-size="9" fill="#475569">/:author</text>
+                  <text x="205" y="55" class="sans" font-size="9" fill="#475569">.../site.standard.publication</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <ul class="sans text-sm space-y-1 list-disc list-inside text-slate-700">
+            <li>Delete one fully redundant file — 21 lines gone, zero behaviour change</li>
+            <li>Locality: one place renders the Author Tree module, not two kept in sync by hand</li>
+            <li>Leverage: two seams share one interface, as the loader-level comment in <code class="file-list">loadAuthorTree.server.ts</code> already says they should</li>
+          </ul>
+        </article>
+
+        <!-- Candidate 2 -->
+        <article id="c2" class="space-y-5">
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="badge badge-strong">Strong</span>
+            <h2 class="text-2xl font-semibold">Deepen Site loading into one module</h2>
+          </div>
+          <p class="file-list text-sm text-slate-600">app/routes/site.tsx · app/routes/group.tsx · app/routes/article-site.tsx · (prior art: app/lib/loadAuthorTree.server.ts)</p>
+
+          <p><span class="font-semibold">Problem.</span> Three loaders each hand-roll the same call: <code class="file-list text-sm">withNotFound(() => fetchSite(author, \`https://${'$'}{siteDomain}\`, signal))</code>. The URL-building convention (bare domain → HTTPS URL) and the 404-on-missing-record decision are knowledge, not just code — repeated three times, they can drift independently. This is exactly the shallow-wrapper smell <code class="file-list text-sm">loadAuthorTree.server.ts</code> was already extracted to avoid for the tree routes; site-fetching never got the same treatment.</p>
+
+          <p><span class="font-semibold">Solution.</span> Add <code class="file-list text-sm">loadSite.server.ts</code> exporting <code class="file-list text-sm">loadSite(author, siteDomain, signal)</code>, mirroring <code class="file-list text-sm">loadAuthorTree</code>'s shape exactly. The three routes call it and keep their own group/article lookups on top.</p>
+
+          <div class="rounded-lg border border-slate-200 bg-white p-4">
+            <pre class="mermaid">
+flowchart LR
+  subgraph before[Before]
+    direction TB
+    S1[site.tsx] -.leak.-> F1[fetchSite + withNotFound]
+    G1[group.tsx] -.leak.-> F2[fetchSite + withNotFound]
+    A1[article-site.tsx] -.leak.-> F3[fetchSite + withNotFound]
+  end
+  classDef leak stroke:#dc2626,stroke-width:2px;
+  class F1,F2,F3 leak
+            </pre>
+          </div>
+          <div class="rounded-lg border border-slate-200 bg-white p-4">
+            <pre class="mermaid">
+flowchart LR
+  subgraph after[After]
+    direction TB
+    S2[site.tsx] --> L[loadSite.server.ts]
+    G2[group.tsx] --> L
+    A2[article-site.tsx] --> L
+    L[loadSite.server.ts]:::deep --> SDK[fetchSite]
+  end
+  classDef deep fill:#0f172a,color:#f1f5f9,stroke:#0f172a;
+            </pre>
+          </div>
+
+          <ul class="sans text-sm space-y-1 list-disc list-inside text-slate-700">
+            <li>Locality: the domain→URL convention and 404 mapping live in one module</li>
+            <li>Leverage: one interface, three call sites, one place to test the not-found path</li>
+            <li>Matches a pattern this codebase already committed to once — extends it, doesn't invent it</li>
+          </ul>
+        </article>
+
+        <!-- Candidate 3 -->
+        <article id="c3" class="space-y-5">
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="badge badge-strong">Strong</span>
+            <h2 class="text-2xl font-semibold">Pull the pure logic out of ArticleView and ArticleItem</h2>
+          </div>
+          <p class="file-list text-sm text-slate-600">app/components/ArticleView.tsx · app/components/ArticleItem/ArticleItem.tsx</p>
+
+          <p><span class="font-semibold">Problem.</span> Two non-trivial pure decisions live inside JSX components with no tests: <code class="file-list text-sm">bskyPostUrl()</code> parses an AT-URI into a bsky.app link by array index, and the reading-time calculation applies a 225-wpm constant — both in <code class="file-list text-sm">ArticleView.tsx</code>. <code class="file-list text-sm">ArticleItem</code> separately branches on <code class="file-list text-sm">siteDomain</code>/<code class="file-list text-sm">groupSlug</code> presence to pick a link target. Every other piece of decision logic in this repo — <code class="file-list text-sm">resolveAuthorPath</code>, <code class="file-list text-sm">errorBoundaryContent</code>, <code class="file-list text-sm">withNotFound</code>, <code class="file-list text-sm">tagArticles</code>, <code class="file-list text-sm">publishedOn</code> — was deliberately extracted to <code class="file-list text-sm">lib/*.ts</code> specifically so it's "testable without a DOM environment," per their own comments. These two are the exceptions.</p>
+
+          <p><span class="font-semibold">Solution.</span> Extract <code class="file-list text-sm">bskyPostUrl</code> and a reading-time function into <code class="file-list text-sm">lib/articleMeta.ts</code>; extract the href branch out of <code class="file-list text-sm">ArticleItem</code> into <code class="file-list text-sm">lib/buildArticleHref.ts</code>. Each gets a <code class="file-list text-sm">.test.ts</code> sibling in the same style as <code class="file-list text-sm">publishedOn.test.ts</code>.</p>
+
+          <div class="grid grid-cols-2 gap-6 items-end">
+            <div>
+              <p class="sans text-xs uppercase tracking-wider text-slate-500 mb-2">Before — interface ≈ implementation</p>
+              <div class="diagram-box border border-slate-300 rounded-lg bg-white p-4 flex flex-col gap-1">
+                <div class="border-2 border-slate-400 rounded-t p-2 text-center sans text-xs uppercase tracking-wider text-slate-500">ArticleView props</div>
+                <div class="border-x-2 border-b-2 border-slate-400 rounded-b flex-1 p-3 text-sm space-y-2">
+                  <p class="bg-red-50 border border-red-200 rounded px-2 py-1 text-xs">bskyPostUrl() — untested, inline</p>
+                  <p class="bg-red-50 border border-red-200 rounded px-2 py-1 text-xs">reading time calc — untested, inline</p>
+                  <p class="text-slate-500 text-xs">JSX rendering</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="sans text-xs uppercase tracking-wider text-slate-500 mb-2">After — small interface, deep behind it</p>
+              <div class="diagram-box border border-slate-300 rounded-lg bg-white p-4 flex flex-col gap-3 justify-center">
+                <div class="border-2 border-slate-400 rounded p-2 text-center text-sm">ArticleView — rendering only</div>
+                <div class="deep-box rounded p-3 text-center">
+                  <p class="sans text-xs uppercase tracking-wider text-slate-300">lib/articleMeta.ts</p>
+                  <p class="text-sm mt-1">bskyPostUrl + readingTime</p>
+                  <p class="sans text-xs text-emerald-300 mt-1">+ articleMeta.test.ts</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ul class="sans text-sm space-y-1 list-disc list-inside text-slate-700">
+            <li>Locality: URI-parsing bugs and wpm-constant changes concentrate in one tested module</li>
+            <li>Leverage: same test-without-a-DOM approach already paid for itself five times in this repo</li>
+            <li>ArticleItem's interface shrinks to "give me a target," not "figure out the target"</li>
+          </ul>
+        </article>
+
+        <!-- Candidate 4 -->
+        <article id="c4" class="space-y-5">
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="badge badge-explore">Worth exploring</span>
+            <h2 class="text-2xl font-semibold">Unify the two publishedOn search functions</h2>
+          </div>
+          <p class="file-list text-sm text-slate-600">app/lib/publishedOn.ts</p>
+
+          <p><span class="font-semibold">Problem.</span> <code class="file-list text-sm">findPublishedOn</code> and <code class="file-list text-sm">findPublishedOnInGroup</code> share the same canonical-URL building and the same article-in-group search; they differ only in scope — all sites vs. one named group on one site. Two names for one search, at two call sites (<code class="file-list text-sm">article.tsx</code>, <code class="file-list text-sm">article-site.tsx</code>).</p>
+
+          <p><span class="font-semibold">Solution.</span> One function, <code class="file-list text-sm">findPublishedOn(sites, articleRkey, { groupSlug? })</code>, with the group-scoped route passing a single-site array and a slug. Keep both call sites simple to read.</p>
+
+          <ul class="sans text-sm space-y-1 list-disc list-inside text-slate-700">
+            <li>Leverage: one search implementation instead of two aligned-by-hand copies</li>
+            <li>Risk: an optional-scope parameter can itself drift toward shallow if it grows further — worth a second look before committing</li>
+          </ul>
+        </article>
+
+        <!-- Candidate 5 -->
+        <article id="c5" class="space-y-5">
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="badge badge-speculative">Speculative</span>
+            <h2 class="text-2xl font-semibold">ArticleItem's prop bag is edging toward shallow</h2>
+          </div>
+          <p class="file-list text-sm text-slate-600">app/components/ArticleItem/ArticleItem.tsx</p>
+
+          <p><span class="font-semibold">Problem.</span> Five props — <code class="file-list text-sm">state</code>, <code class="file-list text-sm">siteDomain</code>, <code class="file-list text-sm">groupSlug</code>, <code class="file-list text-sm">showDescription</code> — serve two distinct call-site modes (a nested tree item under Group/Site, and a flat description-list item with a state badge), and <code class="file-list text-sm">siteDomain</code>/<code class="file-list text-sm">groupSlug</code> are only meaningful together. The interface is starting to enumerate its callers instead of hiding them.</p>
+
+          <p><span class="font-semibold">Solution.</span> Pair with candidate 3: once href-building moves to <code class="file-list text-sm">buildArticleHref</code>, callers could pass a resolved <code class="file-list text-sm">to</code> string directly, dropping <code class="file-list text-sm">siteDomain</code>/<code class="file-list text-sm">groupSlug</code> from the component's interface entirely.</p>
+
+          <ul class="sans text-sm space-y-1 list-disc list-inside text-slate-700">
+            <li>At 59 lines the component is still small — splitting now may cost more locality than it buys</li>
+            <li>Re-examine after candidate 3 lands; it may resolve itself</li>
+          </ul>
+        </article>
+
+      </section>
+
+      <section id="top-recommendation" class="border-t-2 border-slate-900 pt-10">
+        <p class="sans text-xs uppercase tracking-widest text-slate-500 mb-2">Top recommendation</p>
+        <h2 class="text-3xl font-semibold mb-3">
+          <a href="#c3" class="hover:underline">Pull the pure logic out of ArticleView and ArticleItem</a>
+        </h2>
+        <p class="text-slate-700 max-w-2xl">This repo has already validated the deepening move five times over — extract the decision, test it without a DOM, keep the component to rendering. ArticleView and ArticleItem are the two places that move hasn't reached yet. Doing it here costs nothing new to learn and closes the last gap in an already-consistent architecture. Start there; candidate 1 (route dedup, already verified safe) is worth taking in the same pass since it's a pure deletion.</p>
+      </section>
+    </main>
+  </body>
+</html>

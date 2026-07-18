@@ -1,4 +1,4 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useRevalidator } from "react-router";
 
 import { errorBoundaryContent } from "~/lib/errorBoundaryContent";
 import type { Route } from "./+types/root";
@@ -38,7 +38,9 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  const { message, details, stack } = errorBoundaryContent(error, import.meta.env.DEV);
+  const { message, details, stack, canRetry } = errorBoundaryContent(error, import.meta.env.DEV);
+  const revalidator = useRevalidator();
+  const isRetrying = revalidator.state === "loading";
 
   return (
     <main className={styles.error}>
@@ -49,9 +51,21 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
           <code>{stack}</code>
         </pre>
       )}
-      <a href="/" className={styles.link}>
-        Return to search
-      </a>
+      <div className={styles.actions}>
+        {canRetry && (
+          <button
+            type="button"
+            className={styles.retryButton}
+            disabled={isRetrying}
+            onClick={() => revalidator.revalidate()}
+          >
+            {isRetrying ? "Retrying…" : "Retry"}
+          </button>
+        )}
+        <a href="/" className={styles.link}>
+          Return to search
+        </a>
+      </div>
     </main>
   );
 }

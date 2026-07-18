@@ -1,9 +1,8 @@
 import { data, useLoaderData } from "react-router";
-import { fetchSite } from "@scribe-atp/core";
 import { ArticleItem } from "~/components/ArticleItem/ArticleItem";
-import { withNotFound } from "~/lib/withNotFound";
-import type { Route } from "./+types/group";
-import styles from "./group.module.css";
+import { loadSite } from "~/lib/loadSite.server";
+import type { Route } from "./+types/Group";
+import styles from "./Group.module.css";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   const group = loaderData?.group;
@@ -19,7 +18,7 @@ export function meta({ loaderData }: Route.MetaArgs) {
 
 export async function loader({ params, request }: Route.LoaderArgs) {
   const { author, siteDomain, groupSlug } = params;
-  const site = await withNotFound(() => fetchSite(author, `https://${siteDomain}`, request.signal));
+  const site = await loadSite(author, siteDomain, request.signal);
   const group = site.groups.find((g) => g.slug === groupSlug);
   if (!group) throw data("Group not found", { status: 404 });
   return { author, site, group, siteDomain, groupSlug };

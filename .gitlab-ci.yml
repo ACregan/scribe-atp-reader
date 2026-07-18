@@ -48,7 +48,6 @@ test:
         - "**/*.js"
         - "**/*.json"
         - ".gitlab-ci.yml"
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 deploy:
   stage: deploy

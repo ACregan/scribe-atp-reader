@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router";
-import type { Route } from "./+types/author";
-import styles from "./author.module.css";
+import type { Route } from "./+types/AuthorLayout";
+import styles from "./AuthorLayout.module.css";
 import SvgIcon, { SvgImageList } from "~/components/SvgIcon/SvgIcon";
 import { SearchBar } from "~/components/SearchBar/SearchBar";
 import SisterLinks from "~/components/SisterLinks/SisterLinks";
