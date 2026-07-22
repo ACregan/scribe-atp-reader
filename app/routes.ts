@@ -10,5 +10,6 @@ export default [
     route("site.standard.publication/:siteDomain/:groupSlug/:articleRkey", "routes/ArticleSite/ArticleSite.tsx"),
     route("site.standard.document", "routes/Articles/Articles.tsx"),
     route("site.standard.document/:articleRkey", "routes/Article/Article.tsx"),
+    route("site.standard.document/:articleRkey/:slug", "routes/Article/Article.tsx", { id: "article-alt" }),
   ]),
 ] satisfies RouteConfig;
