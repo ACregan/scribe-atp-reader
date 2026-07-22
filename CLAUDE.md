@@ -78,8 +78,11 @@ URLs use the current collection names. The input accepts handles, DIDs, and full
   Flat list of all the author's articles across all states
 
 /:author/site.standard.document/:articleRkey
+/:author/site.standard.document/:articleRkey/:slug
   Single article reading view (reached directly)
-  :articleRkey is the TID rkey
+  :articleRkey is the TID rkey. The trailing :slug is accepted but
+  ignored — some third-party aggregators treat the document's `site`
+  field as a URL prefix and append the article slug themselves.
 ```
 
 `:author` is always a handle or DID — whichever the user entered. No normalisation applied.
