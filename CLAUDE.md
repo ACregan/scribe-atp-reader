@@ -87,6 +87,10 @@ URLs use the current collection names. The input accepts handles, DIDs, and full
 
 `:author` is always a handle or DID — whichever the user entered. No normalisation applied.
 
+## AT URI discoverability
+
+Single-article pages (`Article.tsx`) emit `<link rel="site.standard.document" href="at://...">` in the page head, matching the convention already used by hand in every consumer site's `meta()` function (e.g. `norobots/app/routes/post/post.tsx`). This lets third-party validators/aggregators (e.g. site-validator.fly.dev) discover the article's AT URI from the page itself instead of reconstructing it from the URL — which is what caused the trailing-`:slug` bug above in the first place. The tag is only emitted when `params.author` is DID-shaped (`fetchArticle` doesn't return the resolved DID the way `fetchArticleBySlug` does, so it's built from the URL param directly — safe because every Reader-generated loose article URL is already DID-keyed per ADR 0013).
+
 ## Design decisions
 
 **No social buttons.** The Reader is a navigator and preview tool — it browses any author's content by handle or DID. `@scribe-atp/social` is intentionally absent. Social engagement belongs on the author's own consumer sites, not on a neutral third-party browser. Do not add LikeButton, SubscribeButton, or ShareButton.
