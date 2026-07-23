@@ -21,6 +21,14 @@ export function meta({ loaderData, params }: Route.MetaArgs) {
           },
         ]
       : []),
+    // Published articles have a real home on the author's own site — point
+    // crawlers there so Reader's copy (a navigator, not a publishing
+    // surface) doesn't compete with it as duplicate content. Loose/draft
+    // articles have no canonicalUrl (ADR 0013) — Reader's own URL is their
+    // only home, so no tag is added and it stays the de facto canonical.
+    ...(loaderData?.article.canonicalUrl
+      ? [{ tagName: "link", rel: "canonical", href: loaderData.article.canonicalUrl }]
+      : []),
   ];
 }
 

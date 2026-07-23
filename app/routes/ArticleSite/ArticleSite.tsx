@@ -7,7 +7,16 @@ import { withNotFound } from "~/lib/withNotFound";
 import type { Route } from "./+types/ArticleSite";
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  return [{ title: `${loaderData?.article.title ?? "Article"} | Scribe Reader` }];
+  return [
+    { title: `${loaderData?.article.title ?? "Article"} | Scribe Reader` },
+    // Articles reachable via this route are always published (it's the
+    // site.standard.publication-scoped view), so canonicalUrl should always
+    // be set — point crawlers at the author's own site rather than letting
+    // Reader's copy compete with it as duplicate content.
+    ...(loaderData?.article.canonicalUrl
+      ? [{ tagName: "link", rel: "canonical", href: loaderData.article.canonicalUrl }]
+      : []),
+  ];
 }
 
 export async function loader({ params, request }: Route.LoaderArgs) {
