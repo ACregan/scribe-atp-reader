@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { errorBoundaryContent } from "./errorBoundaryContent";
+import { NotFoundError, PdsFetchError, PdsUnreachableError } from "@scribe-atp/core";
 
 // isRouteErrorResponse duck-types on { status, statusText, internal, data }
 // rather than an instanceof check, so a plain object matching that shape
@@ -62,5 +63,36 @@ describe("errorBoundaryContent", () => {
       stack: undefined,
       canRetry: true,
     });
+  });
+
+  it("shows a 404 message for a NotFoundError, with no retry, even in dev", () => {
+    const error = new NotFoundError("Article not found: x");
+    expect(errorBoundaryContent(error, true)).toEqual({
+      message: "404",
+      details: "The requested page could not be found.",
+      stack: undefined,
+      canRetry: false,
+    });
+  });
+
+  it("shows a service-unavailable message for a PdsUnreachableError, and allows retry", () => {
+    const error = new PdsUnreachableError("Could not reach PDS: https://example.com");
+    const result = errorBoundaryContent(error, false);
+    expect(result.message).toBe("Service unavailable");
+    expect(result.canRetry).toBe(true);
+    expect(result.stack).toBeUndefined();
+  });
+
+  it("shows a couldn't-load message for a PdsFetchError, and allows retry", () => {
+    const error = new PdsFetchError("Failed to fetch article: 500");
+    const result = errorBoundaryContent(error, false);
+    expect(result.message).toBe("Couldn't load that");
+    expect(result.canRetry).toBe(true);
+    expect(result.stack).toBeUndefined();
+  });
+
+  it("classifies a PdsUnreachableError as service-unavailable, not couldn't-load, since it extends PdsFetchError", () => {
+    const error = new PdsUnreachableError("Could not reach PDS: https://example.com");
+    expect(errorBoundaryContent(error, false).message).toBe("Service unavailable");
   });
 });
