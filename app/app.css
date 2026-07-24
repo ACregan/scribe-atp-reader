@@ -42,7 +42,7 @@ body {
 }
 main {
   overflow: scroll;
-  height: calc(100dvh - 7rem);
+  height: calc(100dvh - 6rem);
 }
 
 a {

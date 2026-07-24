@@ -91,6 +91,14 @@ URLs use the current collection names. The input accepts handles, DIDs, and full
 
 Single-article pages (`Article.tsx`) emit `<link rel="site.standard.document" href="at://...">` in the page head, matching the convention already used by hand in every consumer site's `meta()` function (e.g. `norobots/app/routes/post/post.tsx`). This lets third-party validators/aggregators (e.g. site-validator.fly.dev) discover the article's AT URI from the page itself instead of reconstructing it from the URL — which is what caused the trailing-`:slug` bug above in the first place. The tag is only emitted when `params.author` is DID-shaped (`fetchArticle` doesn't return the resolved DID the way `fetchArticleBySlug` does, so it's built from the URL param directly — safe because every Reader-generated loose article URL is already DID-keyed per ADR 0013).
 
+## Canonical link to source (SEO)
+
+`Article.tsx` and `ArticleSite.tsx` both emit `<link rel="canonical" href={article.canonicalUrl}>` when `canonicalUrl` is set. Published articles have a real home on the author's own site (e.g. `norobots.blog/creative-writing/...`) — the canonical tag points crawlers there so the Reader's copy doesn't compete with it as duplicate content. Loose/draft articles have no `canonicalUrl` (ADR 0013 — only populated once published), so no tag is added for those; the Reader's own URL correctly stays the de facto canonical by omission, since it's their only home.
+
+Deliberately just the canonical tag, not the SDK's full `generateArticleMeta`/`articleMeta` (which also adds OG/Twitter tags and `BlogPosting` JSON-LD) — see "No social buttons" below, same reasoning: the Reader shouldn't present itself as the canonical source in social shares or structured data.
+
+No sitemap and no RSS feed — the Reader is a generic navigator over *any* AT Protocol author (`/:author/...`, fully dynamic), not a fixed-content site. There's no bounded page set to enumerate for a sitemap, and no single-site identity for a feed to subscribe to (it would just duplicate whatever feed the author's own site already serves). Also deliberately not added to Google Search Console — the canonical tags above actively tell Google not to index published-article pages, so treating the Reader as a "traffic" property works against that intent.
+
 ## Design decisions
 
 **No social buttons.** The Reader is a navigator and preview tool — it browses any author's content by handle or DID. `@scribe-atp/social` is intentionally absent. Social engagement belongs on the author's own consumer sites, not on a neutral third-party browser. Do not add LikeButton, SubscribeButton, or ShareButton.

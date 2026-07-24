@@ -1,21 +1,24 @@
-import { useLoaderData } from "react-router";
+import { Suspense } from "react";
+import { Await, useLoaderData, useParams } from "react-router";
+import type { Site } from "@scribe-atp/core";
 import { GroupItem } from "~/components/GroupItem/GroupItem";
+import { Spinner } from "~/components/Spinner/Spinner";
+import { AwaitErrorBoundary } from "~/components/AwaitErrorBoundary/AwaitErrorBoundary";
 import { loadSite } from "~/lib/loadSite.server";
 import type { Route } from "./+types/Site";
 import styles from "./Site.module.css";
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  return [{ title: `${loaderData?.site.title ?? "Site"} | Scribe Reader` }];
+  const site = loaderData?.status === "ok" ? loaderData.data : undefined;
+  return [{ title: `${site?.title ?? "Site"} | Scribe Reader` }];
 }
 
 export async function loader({ params, request }: Route.LoaderArgs) {
   const { author, siteDomain } = params;
-  const site = await loadSite(author, siteDomain, request.signal);
-  return { author, site };
+  return loadSite(author, siteDomain, request.signal);
 }
 
-export default function SiteRoute() {
-  const { author, site } = useLoaderData<typeof loader>();
+function SiteContent({ author, site }: { author: string; site: Site }) {
   return (
     <main className={styles.page}>
       <div className={styles.pageContainer}>
@@ -31,4 +34,20 @@ export default function SiteRoute() {
       </div>
     </main>
   );
+}
+
+export default function SiteRoute() {
+  const loaderData = useLoaderData<typeof loader>();
+  const { author } = useParams();
+
+  if (loaderData.status === "retrying") {
+    return (
+      <Suspense fallback={<Spinner />}>
+        <Await resolve={loaderData.data} errorElement={<AwaitErrorBoundary />}>
+          {(site) => <SiteContent author={author!} site={site} />}
+        </Await>
+      </Suspense>
+    );
+  }
+  return <SiteContent author={author!} site={loaderData.data} />;
 }

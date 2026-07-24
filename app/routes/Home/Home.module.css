@@ -12,6 +12,8 @@
     rgb(198, 198, 198) 100%
   );
   background-size: cover;
+
+  overflow: hidden;
 }
 
 .linksContainer {
